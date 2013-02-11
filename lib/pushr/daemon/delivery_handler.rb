@@ -37,7 +37,7 @@ module Pushr
 
         if notification
           @connection.write(notification.to_message)
-          @connection.check_for_error
+          @connection.check_for_error(notification)
           Pushr::Daemon.logger.info("[#{@connection.name}] Message delivered to #{notification.device}")
         end
       rescue DeliveryError => e
