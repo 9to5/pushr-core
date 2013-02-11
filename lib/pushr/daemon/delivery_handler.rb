@@ -27,7 +27,7 @@ module Pushr
 
       def handle_next_notification
         notification = nil
-        result = Pushr::Daemon.redis { |conn| conn.blpop(@queue_name, :timeout => 3) }
+        result = Pushr.redis { |conn| conn.blpop(@queue_name, :timeout => 3) }
 
         unless result == nil
           hsh = MultiJson.load(result[1])

@@ -8,7 +8,7 @@ module Pushr
       @apps = {}
 
       def self.load
-        configurations = Pushr::Daemon.redis { |conn| conn.hvals('pushr:configurations') }
+        configurations = Pushr.redis { |conn| conn.hvals('pushr:configurations') }
         configurations.each do |config|
           hsh = ::MultiJson.load(config)
           require "#{hsh["gem"]}"

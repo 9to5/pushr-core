@@ -13,7 +13,7 @@ module Pushr
     end
 
     def save
-      Pushr::Daemon.redis { |conn| conn.rpush('pushr:feedback', self.to_json) }
+      Pushr.redis { |conn| conn.rpush('pushr:feedback', self.to_json) }
     end
   end
 end

@@ -1,7 +1,6 @@
 require 'thread'
-require 'redis'
-require 'connection_pool'
 require 'multi_json'
+require 'pushr/redis_connection'
 require 'pushr/daemon/delivery_error'
 require 'pushr/daemon/delivery_handler'
 require 'pushr/daemon/feedback_handler'
@@ -34,12 +33,6 @@ module Pushr
       while (!@shutting_down)
         sleep 1
       end
-    end
-
-    def self.redis(&block)
-      raise ArgumentError, "requires a block" if !block
-      @redis ||= ConnectionPool.new(:size => 5, :timeout => 3) { Redis.connect }
-      @redis.with(&block)
     end
 
     protected
