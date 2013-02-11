@@ -13,12 +13,12 @@ module Pushr
     end
 
     def save
-      $pushredis.hset('push:configurations', "#{self.name}:#{self.app}", self.to_json)
+      $pushredis.hset('pushr:configurations', "#{self.name}:#{self.app}", self.to_json)
 
     end
 
     def all
-      $pushredis.lrange "push:configurations", 0, -1
+      $pushredis.lrange "pushr:configurations", 0, -1
     end
   end
 end

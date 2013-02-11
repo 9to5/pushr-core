@@ -8,7 +8,7 @@ module Pushr
       @apps = {}
 
       def self.load
-        configurations = Pushr::Daemon.redis { |conn| conn.hvals('push:configurations') }
+        configurations = Pushr::Daemon.redis { |conn| conn.hvals('pushr:configurations') }
         configurations.each do |config|
           hsh = ::MultiJson.load(config)
           require "#{hsh["gem"]}"
@@ -47,7 +47,7 @@ module Pushr
           @connection = @provider.connectiontype.new(@config, i+1)
           @connection.connect
 
-          handler = DeliveryHandler.new("push:#{@config.app}:#{@config.name}", @connection, @config.app, i+1)
+          handler = DeliveryHandler.new("pushr:#{@config.app}:#{@config.name}", @connection, @config.app, i+1)
           handler.start
           @handlers << handler
         end
