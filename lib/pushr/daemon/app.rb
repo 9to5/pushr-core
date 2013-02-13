@@ -15,7 +15,7 @@ module Pushr
           klass = hsh["type"].split('::').inject(Object) {|parent, klass| parent.const_get klass}
           obj = klass.new(hsh)
 
-          @apps["#{obj.app}:#{obj.name}"] = App.new(obj)
+          @apps["#{obj.app}:#{obj.name}"] = App.new(obj) if obj.enabled == true
         end
       end
 
