@@ -19,12 +19,6 @@ module Pushr
         end
       end
 
-      def self.ready
-        ready = []
-        @apps.each { |app, runner| ready << app if runner.ready? }
-        ready
-      end
-
       def self.start
         @apps.values.map(&:start)
       end
