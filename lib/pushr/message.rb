@@ -12,7 +12,7 @@ module Pushr
     end
 
     def save
-      $pushredis.rpush "pushr:#{self.app}:#{self.class::POSTFIX}", self.to_json
+      Pushr.redis { |conn| conn.rpush("pushr:#{self.app}:#{self.class::POSTFIX}", self.to_json) }
     end
   end
 end

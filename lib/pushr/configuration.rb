@@ -13,12 +13,19 @@ module Pushr
     end
 
     def save
-      $pushredis.hset('pushr:configurations', "#{self.name}:#{self.app}", self.to_json)
-
+      Pushr.redis { |conn| conn.hset('pushr:configurations', "#{self.name}:#{self.app}", self.to_json) }
     end
 
-    def all
-      $pushredis.lrange "pushr:configurations", 0, -1
+    def self.all
+      Pushr.redis { |conn| conn.hgetall("pushr:configurations") }
+    end
+
+    def self.find(key)
+      Pushr.redis { |conn| conn.hget("pushr:configurations", key) }
+    end
+
+    def self.delete(key)
+      Pushr.redis { |conn| conn.hdel("pushr:configurations", key) }
     end
   end
 end
