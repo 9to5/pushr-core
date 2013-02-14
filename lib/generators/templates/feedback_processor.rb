@@ -1,6 +1,7 @@
 module Pushr
   class FeedbackProcessor
     def initialize
+      # make sure you've set the RAILS_ENV variable
       load 'config/environment.rb'
     end
 

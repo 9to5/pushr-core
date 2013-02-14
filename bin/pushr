@@ -3,14 +3,12 @@
 require 'optparse'
 require 'pushr'
 
-environment = ARGV[0]
-
 config = Struct.new(:foreground, :pid_file, :error_notification, :feedback_processor).new
 config.foreground = false
 config.error_notification = false
 config.feedback_processor = nil
 
-banner = 'Usage: pushr <Rails environment> [options]'
+banner = 'Usage: pushr [options]'
 ARGV.options do |opts|
   opts.banner = banner
   opts.on('-f', '--foreground', 'Run in the foreground. Log is not written.') { config.foreground = true }
@@ -21,13 +19,6 @@ ARGV.options do |opts|
   opts.on('-h', '--help', 'You\'re looking at it.') { puts opts; exit }
   opts.parse!
 end
-
-if environment.nil?
-  puts banner
-  exit 1
-end
-
-ENV['RAILS_ENV'] = environment
 
 require 'pushr/daemon'
 
