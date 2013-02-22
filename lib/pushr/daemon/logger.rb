@@ -14,9 +14,6 @@ module Pushr
         @logger.formatter = proc do |severity, datetime, progname, msg|
           "[#{datetime}] #{severity}: #{msg}\n"
         end
-
-        log(::Logger::INFO, "Enabled")
-        @logger.add(::Logger::INFO, "[logger enabled")
       end
 
       def info(msg)
@@ -43,14 +40,7 @@ module Pushr
 
       def error_notification(e, options)
         return unless do_error_notification?(e, options)
-
-        if defined?(Airbrake)
-          Airbrake.notify_or_ignore(e)
-        elsif defined?(HoptoadNotifier)
-          HoptoadNotifier.notify_or_ignore(e)
-        elsif defined?(Bugsnag)
-          Bugsnag.notify(e)
-        end
+        Airbrake.notify_or_ignore(e) if defined?(Airbrake)
       end
 
       def do_error_notification?(msg, options)

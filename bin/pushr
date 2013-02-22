@@ -14,7 +14,6 @@ ARGV.options do |opts|
   opts.banner = banner
   opts.on('-f', '--foreground', 'Run in the foreground. Log is not written.') { config.foreground = true }
   opts.on('-p PATH', '--pid-file PATH', String, 'Path to write PID file. Relative to Rails root unless absolute.') { |path| config.pid_file = path }
-  opts.on('-n', '--error-notification', 'Enables error notifications via Airbrake or Bugsnag.') { config.error_notification = true }
   opts.on('-b PATH', '--feedback-processor PATH', String, "Path to the feedback processor. Default: none. Example: 'lib/pushr/feedback_processor'") { |n| config.feedback_processor = n }
   opts.on('-v', '--version', 'Print this version of pushr.') { puts "pushr #{Pushr::VERSION}"; exit }
   opts.on('-h', '--help', 'You\'re looking at it.') { puts opts; exit }
@@ -23,6 +22,17 @@ end
 
 if config.pid_file && !Pathname.new(config.pid_file).absolute?
   config.pid_file = File.join(Dir.pwd.root, config.pid_file)
+end
+
+if ENV["AIRBRAKE_API_KEY"]
+  require 'airbrake'
+  config.error_notification = true
+  Airbrake.configure do |config|
+    config.api_key = ENV["AIRBRAKE_API_KEY"]
+    config.host    = ENV["AIRBRAKE_HOST"]
+    config.port    = ENV["AIRBRAKE_PORT"] ? ENV["AIRBRAKE_PORT"].to_i : 80
+    config.secure  = config.port == 443
+  end
 end
 
 Pushr::Daemon.start(config)
