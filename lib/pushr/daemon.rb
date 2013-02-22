@@ -19,10 +19,7 @@ module Pushr
       self.logger = Logger.new(:foreground => config.foreground, :error_notification => config.error_notification)
       setup_signal_hooks
 
-      unless config.foreground
-        daemonize
-        reconnect_database
-      end
+      daemonize unless config.foreground
       write_pid_file
 
       App.load
