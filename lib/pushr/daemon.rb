@@ -1,4 +1,5 @@
 require 'thread'
+require 'logger'
 require 'multi_json'
 require 'pushr/redis_connection'
 require 'pushr/daemon/delivery_error'

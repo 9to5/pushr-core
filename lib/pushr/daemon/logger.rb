@@ -5,48 +5,40 @@ module Pushr
         @options = options
 
         if @options[:foreground]
-          STDOUT.sync = true
+          @logger = ::Logger.new(STDOUT)
         else
-          open_log
+          @logger = ::Logger.new(File.join(Dir.pwd, 'log', 'pushr.log'))
         end
+
+        @logger.level = ::Logger::INFO
+        @logger.formatter = proc do |severity, datetime, progname, msg|
+          "[#{datetime}] #{severity}: #{msg}\n"
+        end
+
+        log(::Logger::INFO, "Enabled")
+        @logger.add(::Logger::INFO, "[logger enabled")
       end
 
       def info(msg)
-        log(:info, msg)
+        log(::Logger::INFO, msg)
       end
 
       def error(msg, options = {})
         error_notification(msg, options)
-        log(:error, msg, 'ERROR')
+        log(::Logger::ERROR, msg, 'ERROR')
       end
 
       def warn(msg)
-        log(:warn, msg, 'WARNING')
+        log(::Logger::WARN, msg, 'WARNING')
       end
 
       private
 
-      def log(where, msg, prefix = nil)
+      def log(level, msg, prefix = nil)
         if msg.is_a?(Exception)
           msg = "#{msg.class.name}, #{msg.message}: #{msg.backtrace.join("\n") if msg.backtrace}"
         end
-
-        formatted_msg = "[#{Time.now.utc.strftime('%Y-%m-%d %H:%M:%S').to_s}] "
-        formatted_msg << "[#{prefix}] " if prefix
-        formatted_msg << msg
-
-        if @options[:foreground]
-          puts formatted_msg
-        else
-          @logger.send(where, formatted_msg)
-        end
-      end
-
-      def open_log
-        log_file = File.open(File.join(Rails.root, 'log', 'push.log'), 'a')
-        log_file.sync = true
-        @logger = ActiveSupport::BufferedLogger.new(log_file, Rails.logger.level)
-        @logger.auto_flushing = Rails.logger.respond_to?(:auto_flushing) ? Rails.logger.auto_flushing : true
+        @logger.add(level, msg)
       end
 
       def error_notification(e, options)
