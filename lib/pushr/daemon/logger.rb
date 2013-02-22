@@ -5,6 +5,7 @@ module Pushr
         @options = options
 
         if @options[:foreground]
+          STDOUT.sync = true
           @logger = ::Logger.new(STDOUT)
         else
           @logger = ::Logger.new(File.join(Dir.pwd, 'log', 'pushr.log'))
