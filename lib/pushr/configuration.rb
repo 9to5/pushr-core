@@ -13,7 +13,7 @@ module Pushr
     end
 
     def save
-      Pushr.redis { |conn| conn.hset('pushr:configurations', "#{self.name}:#{self.app}", self.to_json) }
+      Pushr.redis { |conn| conn.hset('pushr:configurations', "#{self.app}:#{self.name}", self.to_json) }
     end
 
     def self.all
