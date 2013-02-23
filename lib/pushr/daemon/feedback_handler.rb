@@ -29,7 +29,7 @@ module Pushr
 
       def handle_next_feedback
         feedback = nil
-        result = Pushr.redis { |conn| conn.blpop('push:feedback', :timeout => 3) }
+        result = Pushr.redis { |conn| conn.blpop('pushr:feedback', :timeout => 3) }
 
         unless result == nil
           hsh = MultiJson.load(result[1])
