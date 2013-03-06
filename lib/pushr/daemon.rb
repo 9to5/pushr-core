@@ -23,6 +23,7 @@ module Pushr
       write_pid_file
 
       App.load
+      scale_redis_connections
       App.start
       self.feedback_handler = FeedbackHandler.new(config.feedback_processor)
       self.feedback_handler.start
@@ -34,6 +35,14 @@ module Pushr
     end
 
     protected
+
+    def self.scale_redis_connections
+      # feedback handler + app + app.totalconnections
+      connections = 1 + 1 + App.total_connections
+      Pushr.configure do |config|
+        config.redis = { :size => connections }
+      end
+    end
 
     def self.setup_signal_hooks
       @shutting_down = false

@@ -19,6 +19,10 @@ module Pushr
         end
       end
 
+      def self.total_connections
+        @apps.values.map(&:connections).inject(0, :+)
+      end
+
       def self.start
         @apps.values.map(&:start)
       end
@@ -32,6 +36,10 @@ module Pushr
         @handlers = []
         @provider = nil
         @connection = nil
+      end
+
+      def connections
+        @config.connections
       end
 
       def start
