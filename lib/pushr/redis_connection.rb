@@ -29,6 +29,7 @@ module Pushr
 
     # Not public
     def self.determine_redis_provider
+      return ENV['PUSHR_URL'] if ENV['PUSHR_URL']
       return ENV['REDISTOGO_URL'] if ENV['REDISTOGO_URL']
       provider = ENV['REDIS_PROVIDER'] || 'REDIS_URL'
       ENV[provider]
