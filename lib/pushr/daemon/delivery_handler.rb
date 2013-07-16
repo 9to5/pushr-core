@@ -35,7 +35,6 @@ module Pushr
           notification = obj.new(hsh)
 
           if notification
-            puts notification.inspect
             Pushr.instrument('message',{app: notification.app, type: notification.type}) do
               @connection.write(notification.to_message)
               @connection.check_for_error(notification)
