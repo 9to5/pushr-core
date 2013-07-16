@@ -33,12 +33,15 @@ module Pushr
           hsh = MultiJson.load(result[1])
           obj = hsh['type'].split('::').inject(Object) {|parent, klass| parent.const_get klass}
           notification = obj.new(hsh)
-        end
 
-        if notification
-          @connection.write(notification.to_message)
-          @connection.check_for_error(notification)
-          Pushr::Daemon.logger.info("[#{@connection.name}] Message delivered to #{notification.device}")
+          if notification
+            puts notification.inspect
+            Pushr.instrument('message',{app: notification.app, type: notification.type}) do
+              @connection.write(notification.to_message)
+              @connection.check_for_error(notification)
+              Pushr::Daemon.logger.info("[#{@connection.name}] Message delivered to #{notification.device}")
+            end
+          end
         end
       rescue DeliveryError => e
         Pushr::Daemon.logger.error(e, {:error_notification => e.notify})

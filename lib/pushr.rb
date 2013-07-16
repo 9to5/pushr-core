@@ -43,4 +43,11 @@ module Pushr
       raise ArgumentError, "redis= requires a Hash or ConnectionPool"
     end
   end
+
+  # instruments with a block
+  def self.instrument(name, payload={}, &block)
+    ActiveSupport::Notifications.instrument(name, payload) do
+      yield
+    end
+  end
 end

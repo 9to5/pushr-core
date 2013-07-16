@@ -22,6 +22,8 @@ module Pushr
       daemonize unless config.foreground
       write_pid_file
 
+      load_stats_processor
+
       App.load
       scale_redis_connections
       App.start
@@ -42,6 +44,14 @@ module Pushr
       Pushr.configure do |config|
         config.redis = { :size => connections }
       end
+    end
+
+    def self.load_stats_processor
+      if config.stats_processor
+        require "#{Dir.pwd}/#{config.stats_processor}"
+      end
+    rescue => e
+      logger.error("Failed to stats_processor: #{e.inspect}")
     end
 
     def self.setup_signal_hooks
