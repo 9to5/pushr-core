@@ -16,7 +16,7 @@ module Pushr
 
     def self.start(config)
       self.config = config
-      self.logger = Logger.new(:foreground => config.foreground, :error_notification => config.error_notification)
+      self.logger = Logger.new(foreground: config.foreground, error_notification: config.error_notification)
       setup_signal_hooks
 
       daemonize unless config.foreground
@@ -28,10 +28,10 @@ module Pushr
       scale_redis_connections
       App.start
       self.feedback_handler = FeedbackHandler.new(config.feedback_processor)
-      self.feedback_handler.start
+      feedback_handler.start
 
       logger.info('[Daemon] Ready')
-      while (!@shutting_down)
+      while @shutting_down
         sleep 1
       end
     end
@@ -42,7 +42,7 @@ module Pushr
       # feedback handler + app + app.totalconnections
       connections = 1 + 1 + App.total_connections
       Pushr.configure do |config|
-        config.redis = { :size => connections }
+        config.redis = { size: connections }
       end
     end
 
@@ -57,7 +57,7 @@ module Pushr
     def self.setup_signal_hooks
       @shutting_down = false
 
-      ['SIGINT', 'SIGTERM'].each do |signal|
+      %w(SIGINT SIGTERM).each do |signal|
         Signal.trap(signal) do
           handle_shutdown_signal
         end
@@ -72,12 +72,12 @@ module Pushr
 
     def self.shutdown
       print "\nShutting down..."
-      self.feedback_handler.stop
+      feedback_handler.stop
       App.stop
 
       while Thread.list.count > 1
         sleep 0.1
-        print "."
+        print '.'
       end
       print "\n"
       delete_pid_file
@@ -97,10 +97,10 @@ module Pushr
     end
 
     def self.write_pid_file
-      if !config[:pid_file].blank?
+      unless config[:pid_file].blank?
         begin
           File.open(config[:pid_file], 'w') do |f|
-            f.puts $$
+            f.puts $PROCESS_ID
           end
         rescue SystemCallError => e
           logger.error("Failed to write PID to '#{config[:pid_file]}': #{e.inspect}")
@@ -110,7 +110,7 @@ module Pushr
 
     def self.delete_pid_file
       pid_file = config[:pid_file]
-      File.delete(pid_file) if !pid_file.blank? && File.exists?(pid_file)
+      File.delete(pid_file) if !pid_file.blank? && File.exist?(pid_file)
     end
   end
 end

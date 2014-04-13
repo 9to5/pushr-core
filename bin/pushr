@@ -26,13 +26,13 @@ if config.pid_file && !Pathname.new(config.pid_file).absolute?
   config.pid_file = File.join(Dir.pwd.root, config.pid_file)
 end
 
-if ENV["AIRBRAKE_API_KEY"]
+if ENV['AIRBRAKE_API_KEY']
   require 'airbrake'
   config.error_notification = true
   Airbrake.configure do |config|
-    config.api_key = ENV["AIRBRAKE_API_KEY"]
-    config.host    = ENV["AIRBRAKE_HOST"]
-    config.port    = ENV["AIRBRAKE_PORT"] ? ENV["AIRBRAKE_PORT"].to_i : 80
+    config.api_key = ENV['AIRBRAKE_API_KEY']
+    config.host    = ENV['AIRBRAKE_HOST']
+    config.port    = ENV['AIRBRAKE_PORT'] ? ENV['AIRBRAKE_PORT'].to_i : 80
     config.secure  = config.port == 443
   end
 end

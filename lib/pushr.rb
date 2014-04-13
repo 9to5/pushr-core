@@ -7,8 +7,8 @@ require 'pushr/feedback'
 require 'pushr/redis_connection'
 
 module Pushr
-  NAME = "Pushr"
-  DEFAULTS = { }
+  NAME = 'Pushr'
+  DEFAULTS = {}
 
   def self.options
     @options ||= DEFAULTS.dup
@@ -29,7 +29,7 @@ module Pushr
   end
 
   def self.redis(&block)
-    raise ArgumentError, "requires a block" if !block
+    fail ArgumentError, 'requires a block' unless block
     @redis ||= Pushr::RedisConnection.create
     @redis.with(&block)
   end
@@ -41,12 +41,12 @@ module Pushr
     elsif hash.is_a?(ConnectionPool)
       @redis = hash
     else
-      raise ArgumentError, "redis= requires a Hash or ConnectionPool"
+      fail ArgumentError, 'redis= requires a Hash or ConnectionPool'
     end
   end
 
   # instruments with a block
-  def self.instrument(name, payload={}, &block)
+  def self.instrument(name, payload = {}, &block)
     ActiveSupport::Notifications.instrument(name, payload) do
       yield
     end

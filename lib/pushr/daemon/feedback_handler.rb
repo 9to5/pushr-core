@@ -4,7 +4,7 @@ module Pushr
       attr_reader :name, :processor, :processor_path
 
       def initialize(processor_path)
-        @name = "FeedbackHandler"
+        @name = 'FeedbackHandler'
         @processor_path = processor_path
       end
 
@@ -29,11 +29,11 @@ module Pushr
 
       def handle_next_feedback
         feedback = nil
-        result = Pushr.redis { |conn| conn.blpop('pushr:feedback', :timeout => 3) }
+        result = Pushr.redis { |conn| conn.blpop('pushr:feedback', timeout: 3) }
 
-        unless result == nil
+        unless result.nil?
           hsh = MultiJson.load(result[1])
-          obj = hsh['type'].split('::').inject(Object) {|parent, klass| parent.const_get klass}
+          obj = hsh['type'].split('::').reduce(Object) { |parent, klass| parent.const_get klass }
           feedback = obj.new(hsh)
         end
 

@@ -1,7 +1,7 @@
 class PushrGenerator < Rails::Generators::Base
-  desc "This generator creates an feedback_processor file at lib/pushr"
+  desc 'This generator creates an feedback_processor file at lib/pushr'
   def create_lib_file
-    copy_file "feedback_processor.rb",  "lib/pushr/feedback_processor.rb"
+    copy_file 'feedback_processor.rb',  'lib/pushr/feedback_processor.rb'
   end
 
   def create_initializer_file

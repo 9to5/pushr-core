@@ -1,12 +1,10 @@
 module Pushr
   module Daemon
     class App
-
       @apps = {}
 
       class << self
         attr_reader :apps
-
 
         def load
           Configuration.all.each do |config|
@@ -42,10 +40,10 @@ module Pushr
         @provider = load_provider(@config.name, @config)
 
         @config.connections.times do |i|
-          @connection = @provider.connectiontype.new(@config, i+1)
+          @connection = @provider.connectiontype.new(@config, i + 1)
           @connection.connect
 
-          handler = DeliveryHandler.new("pushr:#{@config.app}:#{@config.name}", @connection, @config.app, i+1)
+          handler = DeliveryHandler.new("pushr:#{@config.app}:#{@config.name}", @connection, @config.app, i + 1)
           handler.start
           @handlers << handler
         end

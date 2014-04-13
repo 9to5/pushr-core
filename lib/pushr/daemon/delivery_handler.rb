@@ -27,15 +27,15 @@ module Pushr
 
       def handle_next_notification
         notification = nil
-        result = Pushr.redis { |conn| conn.blpop(@queue_name, :timeout => 3) }
+        result = Pushr.redis { |conn| conn.blpop(@queue_name, timeout: 3) }
 
-        unless result == nil
+        unless result.nil?
           hsh = MultiJson.load(result[1])
-          obj = hsh['type'].split('::').inject(Object) {|parent, klass| parent.const_get klass}
+          obj = hsh['type'].split('::').reduce(Object) { |parent, klass| parent.const_get klass }
           notification = obj.new(hsh)
 
           if notification
-            Pushr.instrument('message',{app: notification.app, type: notification.type}) do
+            Pushr.instrument('message', app: notification.app, type: notification.type) do
               @connection.write(notification.to_message)
               @connection.check_for_error(notification)
               Pushr::Daemon.logger.info("[#{@connection.name}] Message delivered to #{notification.device}")
@@ -43,7 +43,7 @@ module Pushr
           end
         end
       rescue DeliveryError => e
-        Pushr::Daemon.logger.error(e, {:error_notification => e.notify})
+        Pushr::Daemon.logger.error(e, error_notification: e.notify)
       rescue StandardError => e
         Pushr::Daemon.logger.error(e)
       end
