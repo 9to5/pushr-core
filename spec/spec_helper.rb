@@ -3,6 +3,9 @@
 # Require this file using `require "spec_helper"` to ensure that it is only
 # loaded once.
 
+require 'simplecov'
+SimpleCov.start
+
 require 'pushr'
 require 'mock_redis'
 
