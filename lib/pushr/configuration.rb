@@ -17,15 +17,25 @@ module Pushr
     end
 
     def self.all
-      Pushr.redis { |conn| conn.hgetall("pushr:configurations") }
+      configurations = Pushr.redis { |conn| conn.hgetall("pushr:configurations") }
+      configurations.each { |key,config| configurations[key] = instantiate(config, key) }
+      configurations.values
     end
 
     def self.find(key)
-      Pushr.redis { |conn| conn.hget("pushr:configurations", key) }
+      config = Pushr.redis { |conn| conn.hget("pushr:configurations", key) }
+      instantiate(config, key)
     end
 
     def self.delete(key)
       Pushr.redis { |conn| conn.hdel("pushr:configurations", key) }
+    end
+
+    def self.instantiate(config, id)
+      hsh = ::MultiJson.load(config).merge!({id: id})
+      require "#{hsh["gem"]}"
+      klass = hsh["type"].split('::').inject(Object) {|parent, klass| parent.const_get klass}
+      klass.new(hsh)
     end
   end
 end

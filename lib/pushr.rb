@@ -1,4 +1,5 @@
 require 'active_model'
+require 'multi_json'
 require 'pushr/version'
 require 'pushr/configuration'
 require 'pushr/message'

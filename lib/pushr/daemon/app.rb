@@ -1,34 +1,30 @@
 module Pushr
   module Daemon
     class App
-      class << self
-        attr_reader :apps
-      end
 
       @apps = {}
 
-      def self.load
-        configurations = Pushr.redis { |conn| conn.hvals('pushr:configurations') }
-        configurations.each do |config|
-          hsh = ::MultiJson.load(config)
-          require "#{hsh["gem"]}"
-          klass = hsh["type"].split('::').inject(Object) {|parent, klass| parent.const_get klass}
-          obj = klass.new(hsh)
+      class << self
+        attr_reader :apps
 
-          @apps["#{obj.app}:#{obj.name}"] = App.new(obj) if obj.enabled == true
+
+        def load
+          Configuration.all.each do |config|
+            @apps["#{config.app}:#{config.name}"] = App.new(config) if config.enabled == true
+          end
         end
-      end
 
-      def self.total_connections
-        @apps.values.map(&:connections).inject(0, :+)
-      end
+        def total_connections
+          @apps.values.map(&:connections).inject(0, :+)
+        end
 
-      def self.start
-        @apps.values.map(&:start)
-      end
+        def start
+          @apps.values.map(&:start)
+        end
 
-      def self.stop
-        @apps.values.map(&:stop)
+        def stop
+          @apps.values.map(&:stop)
+        end
       end
 
       def initialize(config)

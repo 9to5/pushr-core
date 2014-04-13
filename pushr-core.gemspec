@@ -23,5 +23,9 @@ Gem::Specification.new do |s|
   s.add_dependency 'multi_json'
   s.add_dependency 'connection_pool', '~> 1.0'
   s.add_dependency 'activemodel'
-  s.add_development_dependency "sqlite3"
+  s.add_development_dependency 'rspec'
+  s.add_development_dependency 'rspec-nc'
+  s.add_development_dependency 'guard'
+  s.add_development_dependency 'guard-rspec'
+  s.add_development_dependency 'mock_redis'
 end
