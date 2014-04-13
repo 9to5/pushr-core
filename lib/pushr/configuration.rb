@@ -2,6 +2,7 @@ module Pushr
   class Configuration
     include ActiveModel::Validations
 
+    attr_accessor :id, :gem, :type, :app, :enabled, :connections
     validates :app, presence: true
     validates :connections, presence: true
     validates :connections, numericality: { greater_than: 0, only_integer: true }
@@ -12,8 +13,16 @@ module Pushr
       end
     end
 
+    def key
+      "#{app}:#{name}"
+    end
+
     def save
-      Pushr.redis { |conn| conn.hset('pushr:configurations', "#{app}:#{name}", to_json) }
+      Pushr.redis { |conn| conn.hset('pushr:configurations', key, to_json) }
+    end
+
+    def delete
+      Pushr.redis { |conn| conn.hdel('pushr:configurations', key) }
     end
 
     def self.all
@@ -27,13 +36,9 @@ module Pushr
       instantiate(config, key)
     end
 
-    def self.delete(key)
-      Pushr.redis { |conn| conn.hdel('pushr:configurations', key) }
-    end
-
     def self.instantiate(config, id)
       hsh = ::MultiJson.load(config).merge!(id: id)
-      require "#{hsh["gem"]}"
+      # require "#{hsh["gem"]}"
       klass = hsh['type'].split('::').reduce(Object) { |parent, klass| parent.const_get klass }
       klass.new(hsh)
     end
