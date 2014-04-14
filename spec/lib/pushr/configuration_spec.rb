@@ -47,4 +47,3 @@ describe Pushr::Configuration do
     end
   end
 end
-

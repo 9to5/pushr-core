@@ -6,7 +6,7 @@ module Pushr
       :dummy
     end
 
-    def to_json(args=nil)
+    def to_json(args = nil)
       hsh = {
         id: [@app, name].join(':'),
         gem: 'pushr-dummy',

@@ -9,7 +9,7 @@ describe Pushr::Feedback do
   end
 
   describe 'save' do
-    let(:feedback) { Pushr::FeedbackDummy.new(app: 'app_name', device: 'a'*64, follow_up: 'delete') }
+    let(:feedback) { Pushr::FeedbackDummy.new(app: 'app_name', device: 'a' * 64, follow_up: 'delete') }
     it 'should save a feedback' do
       feedback.save
       expect(Pushr::Feedback.next).to be_kind_of(Pushr::FeedbackDummy)
