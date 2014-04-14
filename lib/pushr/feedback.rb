@@ -19,13 +19,9 @@ module Pushr
     def self.next(timeout = 3)
       Pushr.redis do |conn|
         feedback = conn.blpop('pushr:feedback', timeout)
-        if feedback
-          return instantiate(feedback[1])
-        end
+        return instantiate(feedback[1]) if feedback
       end
     end
-
-    private
 
     def self.instantiate(config)
       hsh = ::MultiJson.load(config)

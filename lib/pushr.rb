@@ -10,12 +10,10 @@ module Pushr
   NAME = 'Pushr'
   DEFAULTS = {}
 
+  attr_writer :options
+
   def self.options
     @options ||= DEFAULTS.dup
-  end
-
-  def self.options=(opts)
-    @options = opts
   end
 
   ##

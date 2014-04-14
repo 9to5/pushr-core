@@ -18,13 +18,9 @@ module Pushr
     def self.next(queue_name, timeout = 3)
       Pushr.redis do |conn|
         message = conn.blpop(queue_name, timeout)
-        if message
-          return instantiate(message[1])
-        end
+        return instantiate(message[1]) if message
       end
     end
-
-    private
 
     def self.instantiate(message)
       return nil unless message
