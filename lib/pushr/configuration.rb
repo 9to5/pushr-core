@@ -2,7 +2,6 @@ module Pushr
   class Configuration
     include ActiveModel::Validations
 
-    attr_accessor :id, :gem, :type, :app, :enabled, :connections
     validates :app, presence: true
     validates :connections, presence: true
     validates :connections, numericality: { greater_than: 0, only_integer: true }
@@ -38,7 +37,6 @@ module Pushr
 
     def self.instantiate(config, id)
       hsh = ::MultiJson.load(config).merge!(id: id)
-      # require "#{hsh["gem"]}"
       klass = hsh['type'].split('::').reduce(Object) { |parent, klass| parent.const_get klass }
       klass.new(hsh)
     end
