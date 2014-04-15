@@ -1,18 +1,14 @@
 class ::Logger
+  attr_reader :log
   def initialize(file)
+    @log = []
   end
 
-  @@log = []
-
   def self.info(message)
-    @@log.push(message)
+    @log.push(message)
   end
 
   def add(level, msg)
     puts "#{level}: #{msg}"
-  end
-
-  def self.log
-    @@log
   end
 end
