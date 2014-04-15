@@ -6,6 +6,9 @@
 require 'simplecov'
 SimpleCov.start
 
+require 'coveralls'
+Coveralls.wear!
+
 require 'pushr'
 require 'mock_redis'
 
