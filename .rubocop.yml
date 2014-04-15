@@ -1,0 +1,8 @@
+Documentation:
+  Enabled: false
+
+LineLength:
+  Max: 140
+
+NumericLiterals:
+  MinDigits: 100

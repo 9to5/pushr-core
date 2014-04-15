@@ -9,3 +9,4 @@ gem 'rake'
 gem 'multi_json'
 gem 'connection_pool'
 gem 'coveralls', require: false
+gem 'rubocop'
