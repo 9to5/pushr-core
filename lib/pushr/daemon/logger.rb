@@ -21,8 +21,8 @@ module Pushr
         log(::Logger::INFO, msg)
       end
 
-      def error(msg, options = {})
-        error_notification(msg, options)
+      def error(msg)
+        error_notification(msg)
         log(::Logger::ERROR, msg, 'ERROR')
       end
 
@@ -39,13 +39,13 @@ module Pushr
         @logger.add(level, msg)
       end
 
-      def error_notification(e, options)
-        return unless do_error_notification?(e, options)
+      def error_notification(e)
+        return unless do_error_notification?(e)
         Airbrake.notify_or_ignore(e) if defined?(Airbrake)
       end
 
-      def do_error_notification?(msg, options)
-        @options[:error_notification] and options[:error_notification] != false and msg.is_a?(Exception)
+      def do_error_notification?(e)
+        @options[:error_notification] && e.notify && e.is_a?(Exception)
       end
     end
   end
