@@ -11,10 +11,10 @@ module Pushr
       end
 
       def start
-        @thread = Thread.new do
+        Thread.new do
           loop do
+            handle_next
             break if @stop
-            handle_next_notification
           end
         end
       end
@@ -25,26 +25,16 @@ module Pushr
 
       protected
 
-      def handle_next_notification
-        notification = nil
-        result = Pushr.redis { |conn| conn.blpop(@queue_name, timeout: 3) }
+      def handle_next
+        message = Pushr::Message.next(@queue_name)
+        return if message.nil?
 
-        unless result.nil?
-          hsh = MultiJson.load(result[1])
-          obj = hsh['type'].split('::').reduce(Object) { |parent, klass| parent.const_get klass }
-          notification = obj.new(hsh)
-
-          if notification
-            Pushr.instrument('message', app: notification.app, type: notification.type) do
-              @connection.write(notification.to_message)
-              @connection.check_for_error(notification)
-              Pushr::Daemon.logger.info("[#{@connection.name}] Message delivered to #{notification.device}")
-            end
-          end
+        Pushr.instrument('message', app: message.app, type: message.type) do
+          @connection.write(message)
+          @connection.check_for_error(message)
+          Pushr::Daemon.logger.info("[#{@connection.name}] Message delivered to #{message.device}")
         end
-      rescue DeliveryError => e
-        Pushr::Daemon.logger.error(e, error_notification: e.notify)
-      rescue StandardError => e
+      rescue => e
         Pushr::Daemon.logger.error(e)
       end
     end
