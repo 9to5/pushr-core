@@ -1,14 +1,11 @@
 class ::Logger
   attr_reader :log
+  attr_accessor :level, :formatter
   def initialize(file)
     @log = []
   end
 
-  def self.info(message)
-    @log.push(message)
-  end
-
   def add(level, msg)
-    puts "#{level}: #{msg}"
+    puts formatter.call(level, Time.now, 'Pushr', msg)
   end
 end

@@ -8,7 +8,11 @@ module Pushr
           STDOUT.sync = true
           @logger = ::Logger.new(STDOUT)
         else
-          @logger = ::Logger.new(File.join(Dir.pwd, 'log', 'pushr.log'))
+          log_dir = File.join(Dir.pwd, 'log')
+          FileUtils.mkdir_p(log_dir)
+          log = File.open(File.join(log_dir, 'pushr.log'), 'a')
+          log.sync = true
+          @logger = ::Logger.new(log)
         end
 
         @logger.level = ::Logger::INFO
@@ -40,12 +44,13 @@ module Pushr
       end
 
       def error_notification(e)
-        return unless do_error_notification?(e)
-        Airbrake.notify_or_ignore(e) if defined?(Airbrake)
+        if do_error_notification?(e) && defined?(Airbrake)
+          Airbrake.notify_or_ignore(e)
+        end
       end
 
       def do_error_notification?(e)
-        @options[:error_notification] && e.notify && e.is_a?(Exception)
+        @options[:error_notification] && ((e.is_a?(DeliveryError) && e.notify) || e.is_a?(Exception))
       end
     end
   end
