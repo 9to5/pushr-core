@@ -15,8 +15,8 @@ module Pushr
 
         @thread = Thread.new do
           loop do
+            handle_next
             break if @stop
-            handle_next_feedback
           end
         end
       end
@@ -27,18 +27,10 @@ module Pushr
 
       protected
 
-      def handle_next_feedback
-        feedback = nil
-        result = Pushr.redis { |conn| conn.blpop('pushr:feedback', timeout: 3) }
-
-        unless result.nil?
-          hsh = MultiJson.load(result[1])
-          obj = hsh['type'].split('::').reduce(Object) { |parent, klass| parent.const_get klass }
-          feedback = obj.new(hsh)
-        end
-
+      def handle_next
+        feedback = Pushr::Feedback.next
         @processor.process(feedback) if feedback
-      rescue StandardError => e
+      rescue => e
         Pushr::Daemon.logger.error(e)
       end
     end
