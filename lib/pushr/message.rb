@@ -25,7 +25,7 @@ module Pushr
     def self.instantiate(message)
       return nil unless message
       hsh = ::MultiJson.load(message)
-      klass = hsh['type'].split('::').reduce(Object) { |parent, klass| parent.const_get klass }
+      klass = hsh['type'].split('::').reduce(Object) { |a, e| a.const_get e }
       klass.new(hsh)
     end
   end

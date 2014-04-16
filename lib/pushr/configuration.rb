@@ -37,7 +37,7 @@ module Pushr
 
     def self.instantiate(config, id)
       hsh = ::MultiJson.load(config).merge!(id: id)
-      klass = hsh['type'].split('::').reduce(Object) { |parent, klass| parent.const_get klass }
+      klass = hsh['type'].split('::').reduce(Object) { |a, e| a.const_get e }
       klass.new(hsh)
     end
   end

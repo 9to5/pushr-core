@@ -1,4 +1,4 @@
-class ::Logger
+class Logger
   attr_reader :log
   attr_accessor :level, :formatter
   def initialize(file)
