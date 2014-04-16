@@ -1,6 +1,6 @@
 module Pushr
   class ConfigurationDummy < Pushr::Configuration
-    attr_accessor :id, :gem, :type, :app, :enabled, :connections, :test_attr
+    attr_accessor :id, :type, :app, :enabled, :connections, :test_attr
 
     def name
       :dummy
@@ -9,7 +9,6 @@ module Pushr
     def to_json(args = nil)
       hsh = {
         id: [@app, name].join(':'),
-        gem: 'pushr-dummy',
         type: self.class.to_s,
         app: app,
         enabled: enabled,
