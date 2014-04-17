@@ -29,7 +29,6 @@ module Pushr
         @config = config
         @handlers = []
         @provider = nil
-        @connection = nil
       end
 
       def connections
@@ -40,10 +39,10 @@ module Pushr
         @provider = load_provider(@config.name, @config)
 
         @config.connections.times do |i|
-          @connection = @provider.connectiontype.new(@config, i + 1)
-          @connection.connect
+          connection = @provider.connectiontype.new(@config, i + 1)
+          connection.connect
 
-          handler = DeliveryHandler.new("pushr:#{@config.app}:#{@config.name}", @connection, @config.app, i + 1)
+          handler = DeliveryHandler.new("pushr:#{@config.app}:#{@config.name}", connection, @config.app, i + 1)
           handler.start
           @handlers << handler
         end
@@ -60,7 +59,9 @@ module Pushr
         begin
           middleware = Pushr::Daemon.const_get("#{klass}".camelize)
         rescue NameError
-          raise LoadError, "Could not find matching push provider for #{klass.inspect}. You may need to install an additional gem (such as push-#{klass})."
+          message = "Could not find matching push provider for #{klass.inspect}. " \
+                    "You may need to install an additional gem (such as push-#{klass})."
+          raise LoadError, message
         end
 
         middleware.new(options)

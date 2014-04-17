@@ -3,13 +3,48 @@ require 'pushr/daemon'
 
 describe Pushr::Daemon::App do
 
-  # before(:each) do
-  #   Pushr.configure do |config|
-  #     config.redis = ConnectionPool.new(size: 1, timeout: 1) { MockRedis.new }
-  #   end
-  # end
+  before(:each) do
+    Pushr.configure do |config|
+      config.redis = ConnectionPool.new(size: 1, timeout: 1) { MockRedis.new }
+    end
+    Pushr::Daemon.logger = Pushr::Daemon::Logger.new(foreground: true, error_notification: false)
+  end
 
-  describe 'load' do
-    it 'should load configurations'
+  let(:config) { Pushr::ConfigurationDummy.new(app: 'app_name', connections: 1, enabled: true) }
+  describe 'self' do
+    before(:each) do
+      config.save
+      Pushr::Daemon::App.load
+    end
+
+    it 'should load show total_connections' do
+      expect(Pushr::Daemon::App.total_connections).to eql(1)
+    end
+
+    it 'should load app' do
+      expect(Pushr::Daemon::App.apps.count).to eql(1)
+    end
+
+    it 'should start/stop app' do
+      Pushr::Daemon::App.start
+      Pushr::Daemon::App.stop
+    end
+  end
+
+  describe 'class' do
+    it 'should start configuration' do
+      Pushr::Daemon::DeliveryHandler.any_instance.should_receive(:start)
+      config.save
+      app = Pushr::Daemon::App.new(config)
+      app.start
+      app.stop
+    end
+
+    it 'should not start configuration' do
+      config = Pushr::InvalidConfigurationDummy.new(app: 'app_name', connections: 2, enabled: true)
+      config.save
+      app = Pushr::Daemon::App.new(config)
+      expect { app.start }.to raise_error(LoadError)
+    end
   end
 end
