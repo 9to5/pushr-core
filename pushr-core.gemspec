@@ -21,7 +21,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'redis', '~> 3'
   s.add_dependency 'redis-namespace'
   s.add_dependency 'multi_json'
-  s.add_dependency 'connection_pool', '~> 1.0'
+  s.add_dependency 'connection_pool', '~> 2.0'
   s.add_dependency 'activemodel'
   s.add_development_dependency 'rspec'
   s.add_development_dependency 'rspec-nc'
