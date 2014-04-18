@@ -16,7 +16,7 @@ describe Pushr::Daemon::FeedbackHandler do
   end
 
   describe 'start' do
-    let(:feedback) { Pushr::FeedbackDummy.new(app: 'app_name', device: 'test') }
+    let(:feedback) { Pushr::FeedbackDummy.new(app: 'app_name', device: 'a' * 64, failed_at: Time.now, follow_up: 'delete') }
     it 'should start' do
       Pushr::FeedbackProcessor.any_instance.should_receive(:process)
       feedback.save
@@ -28,7 +28,7 @@ describe Pushr::Daemon::FeedbackHandler do
   end
 
   describe 'fails' do
-    let(:feedback) { Pushr::FeedbackDummy.new(app: 'app_name', device: 'test') }
+    let(:feedback) { Pushr::FeedbackDummy.new(app: 'app_name', device: 'a' * 64, failed_at: Time.now, follow_up: 'delete') }
     let(:error) { StandardError.new('test') }
     it 'should start' do
       Pushr::FeedbackProcessor.any_instance.stub(:process).and_raise(error)

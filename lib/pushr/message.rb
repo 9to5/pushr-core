@@ -12,7 +12,11 @@ module Pushr
     end
 
     def save
-      Pushr.redis { |conn| conn.rpush("pushr:#{app}:#{self.class::POSTFIX}", to_json) }
+      if valid?
+        Pushr.redis { |conn| conn.rpush("pushr:#{app}:#{self.class::POSTFIX}", to_json) }
+      else
+        return false
+      end
     end
 
     def self.next(queue_name, timeout = 3)

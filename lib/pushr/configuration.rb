@@ -17,7 +17,11 @@ module Pushr
     end
 
     def save
-      Pushr.redis { |conn| conn.hset('pushr:configurations', key, to_json) }
+      if valid?
+        Pushr.redis { |conn| conn.hset('pushr:configurations', key, to_json) }
+      else
+        return false
+      end
     end
 
     def delete

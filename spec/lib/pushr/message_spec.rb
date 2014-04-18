@@ -16,6 +16,15 @@ describe Pushr::Message do
 
   describe 'next' do
     let(:message) { Pushr::MessageDummy.new(app: 'app_name', device: 'test') }
+    let(:message_invalid) { Pushr::MessageDummy.new }
+    it 'should return true' do
+      expect(message.save).to be_true
+    end
+
+    it 'should return false' do
+      expect(message_invalid.save).to be_false
+    end
+
     it 'should save a message' do
       message.save
       expect(Pushr::Message.next('pushr:app_name:dummy')).to be_kind_of(Pushr::MessageDummy)

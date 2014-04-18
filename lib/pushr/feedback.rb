@@ -13,7 +13,11 @@ module Pushr
     end
 
     def save
-      Pushr.redis { |conn| conn.rpush('pushr:feedback', to_json) }
+      if valid?
+        Pushr.redis { |conn| conn.rpush('pushr:feedback', to_json) }
+      else
+        return false
+      end
     end
 
     def self.next(timeout = 3)
