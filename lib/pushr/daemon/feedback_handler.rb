@@ -13,7 +13,7 @@ module Pushr
         require "#{Dir.pwd}/#{@processor_path}"
         @processor = Pushr::FeedbackProcessor.new
 
-        @thread = Thread.new do
+        Thread.new do
           loop do
             handle_next
             break if @stop
