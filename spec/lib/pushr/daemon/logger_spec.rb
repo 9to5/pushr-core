@@ -4,6 +4,8 @@ require 'pushr/daemon'
 describe Pushr::Daemon::Logger do
   describe 'logger' do
     it 'should log to file' do
+      Logger.any_instance.should_receive(:add)
+      Logger.stub(:add)
       log = File.join(Dir.pwd, 'log', 'pushr.log')
       File.stub(open: log)
       FileUtils.stub(mkdir_p: nil)

@@ -7,7 +7,12 @@ describe Pushr::Daemon::App do
     Pushr.configure do |config|
       config.redis = ConnectionPool.new(size: 1, timeout: 1) { MockRedis.new }
     end
-    Pushr::Daemon.logger = Pushr::Daemon::Logger.new(foreground: true, error_notification: false)
+
+    logger = double('logger')
+    allow(logger).to receive(:info)
+    allow(logger).to receive(:error)
+    allow(logger).to receive(:warn)
+    Pushr::Daemon.logger = logger
   end
 
   let(:config) { Pushr::ConfigurationDummy.new(app: 'app_name', connections: 1, enabled: true) }
