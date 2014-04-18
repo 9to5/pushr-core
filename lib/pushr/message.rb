@@ -3,7 +3,6 @@ module Pushr
     include ActiveModel::Validations
 
     validates :app, presence: true
-    validates :device, presence: true
 
     def initialize(attributes = {})
       attributes.each do |name, value|
