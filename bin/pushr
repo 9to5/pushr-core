@@ -1,4 +1,7 @@
 #!/usr/bin/env ruby
+require 'rubygems'
+require 'bundler/setup'
+Bundler.require
 
 require 'optparse'
 require 'pushr'
