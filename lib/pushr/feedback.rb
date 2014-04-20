@@ -15,6 +15,7 @@ module Pushr
     def save
       if valid?
         Pushr.redis { |conn| conn.rpush('pushr:feedback', to_json) }
+        return true
       else
         return false
       end
