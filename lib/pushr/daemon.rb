@@ -31,7 +31,7 @@ module Pushr
       feedback_handler.start
 
       logger.info('[Daemon] Ready')
-      while @shutting_down
+      while !@shutting_down
         sleep 1
       end
     end
