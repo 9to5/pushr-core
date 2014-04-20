@@ -16,9 +16,6 @@ module Pushr
         def write(data)
           self.data = data
         end
-
-        def check_for_error(notification)
-        end
       end
     end
   end

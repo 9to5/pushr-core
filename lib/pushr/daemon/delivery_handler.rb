@@ -31,7 +31,6 @@ module Pushr
 
         Pushr.instrument('message', app: message.app, type: message.type) do
           @connection.write(message)
-          @connection.check_for_error(message)
           Pushr::Daemon.logger.info("[#{@connection.name}] Message delivered to #{message.device}")
         end
       rescue => e
