@@ -18,7 +18,7 @@ module Pushr
 
     def save
       if valid?
-        Pushr.redis { |conn| conn.hset('pushr:configurations', key, to_json) }
+        Pushr::Core.redis { |conn| conn.hset('pushr:configurations', key, to_json) }
         return true
       else
         return false
@@ -26,17 +26,17 @@ module Pushr
     end
 
     def delete
-      Pushr.redis { |conn| conn.hdel('pushr:configurations', key) }
+      Pushr::Core.redis { |conn| conn.hdel('pushr:configurations', key) }
     end
 
     def self.all
-      configurations = Pushr.redis { |conn| conn.hgetall('pushr:configurations') }
+      configurations = Pushr::Core.redis { |conn| conn.hgetall('pushr:configurations') }
       configurations.each { |key, config| configurations[key] = instantiate(config, key) }
       configurations.values
     end
 
     def self.find(key)
-      config = Pushr.redis { |conn| conn.hget('pushr:configurations', key) }
+      config = Pushr::Core.redis { |conn| conn.hget('pushr:configurations', key) }
       instantiate(config, key)
     end
 

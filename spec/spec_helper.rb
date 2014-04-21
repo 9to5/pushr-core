@@ -12,7 +12,7 @@ SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
 ]
 SimpleCov.start
 
-require 'pushr'
+require 'pushr/core'
 require 'mock_redis'
 
 Dir['./spec/support/**/*.rb'].sort.each { |f| require f }

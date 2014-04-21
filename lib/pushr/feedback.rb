@@ -14,7 +14,7 @@ module Pushr
 
     def save
       if valid?
-        Pushr.redis { |conn| conn.rpush('pushr:feedback', to_json) }
+        Pushr::Core.redis { |conn| conn.rpush('pushr:feedback', to_json) }
         return true
       else
         return false
@@ -22,7 +22,7 @@ module Pushr
     end
 
     def self.next(timeout = 3)
-      Pushr.redis do |conn|
+      Pushr::Core.redis do |conn|
         feedback = conn.blpop('pushr:feedback', timeout)
         return instantiate(feedback[1]) if feedback
       end
