@@ -41,7 +41,7 @@ module Pushr
     def self.scale_redis_connections
       # feedback handler + app + app.totalconnections
       connections = 1 + 1 + App.total_connections
-      Pushr.configure do |config|
+      Pushr::Core.configure do |config|
         config.redis = { size: connections }
       end
     end

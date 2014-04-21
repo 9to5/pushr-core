@@ -10,7 +10,7 @@ module Pushr
       # need a connection for Fetcher and Retry
       # size = options[:size] || (Pushr.server? ? (Pushr.options[:concurrency] + 2) : 5)
       size = options[:size] || 5
-      namespace = options[:namespace] || Pushr.options[:namespace]
+      namespace = options[:namespace] || Pushr::Core.options[:namespace]
 
       ConnectionPool.new(timeout: 1, size: size) do
         build_client(url, namespace, driver)
