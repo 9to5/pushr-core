@@ -23,7 +23,7 @@ module Pushr
 
     def self.next(timeout = 3)
       Pushr::Core.redis do |conn|
-        feedback = conn.blpop('pushr:feedback', timeout)
+        feedback = conn.blpop('pushr:feedback', timeout: timeout)
         return instantiate(feedback[1]) if feedback
       end
     end
