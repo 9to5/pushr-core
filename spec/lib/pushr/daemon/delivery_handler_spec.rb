@@ -26,7 +26,7 @@ describe Pushr::Daemon::DeliveryHandler do
       handler.stop
       thread = handler.start
       thread.join
-      connection.data.to_json.should eql(message.to_json)
+      expect(connection.data.to_json).to eql(message.to_json)
     end
   end
 
@@ -36,7 +36,7 @@ describe Pushr::Daemon::DeliveryHandler do
     let(:connection) { Pushr::Daemon::DummySupport::ConnectionDummy.new(config, 1) }
     let(:error) { Pushr::Daemon::DeliveryError.new('100', message, 'desc', 'source', false) }
     it 'should start' do
-      Pushr::Daemon::DummySupport::ConnectionDummy.any_instance.stub(:check_for_error).and_raise(error)
+      expect_any_instance_of(Pushr::Daemon::DummySupport::ConnectionDummy).to receive(:write).and_raise(error)
       message.save
       connection.connect
       handler = Pushr::Daemon::DeliveryHandler.new('pushr:app_name:dummy', connection, 'app', 1)

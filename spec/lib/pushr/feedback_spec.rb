@@ -12,11 +12,11 @@ describe Pushr::Feedback do
     let(:feedback) { Pushr::FeedbackDummy.new(app: 'app_name', device: 'a' * 64, follow_up: 'delete', failed_at: Time.now) }
     let(:feedback_invalid) { Pushr::FeedbackDummy.new }
     it 'should return true' do
-      expect(feedback.save).to be_true
+      expect(feedback.save).to eql true
     end
 
     it 'should return false' do
-      expect(feedback_invalid.save).to be_false
+      expect(feedback_invalid.save).to eql false
     end
 
     it 'should save a feedback' do

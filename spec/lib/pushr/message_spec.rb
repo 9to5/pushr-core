@@ -18,11 +18,11 @@ describe Pushr::Message do
     let(:message) { Pushr::MessageDummy.new(app: 'app_name', device: 'test') }
     let(:message_invalid) { Pushr::MessageDummy.new }
     it 'should return true' do
-      expect(message.save).to be_true
+      expect(message.save).to eql true
     end
 
     it 'should return false' do
-      expect(message_invalid.save).to be_false
+      expect(message_invalid.save).to eql false
     end
 
     it 'should save a message' do

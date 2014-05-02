@@ -25,11 +25,11 @@ describe Pushr::Configuration do
     let(:config) { Pushr::ConfigurationDummy.new(app: 'app_name', connections: 2, enabled: true) }
     let(:config_invalid) { Pushr::ConfigurationDummy.new }
     it 'should return true' do
-      expect(config.save).to be_true
+      expect(config.save).to eql true
     end
 
     it 'should return false' do
-      expect(config_invalid.save).to be_false
+      expect(config_invalid.save).to eql false
     end
 
     it 'should save a configuration' do
