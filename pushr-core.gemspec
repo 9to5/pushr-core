@@ -18,14 +18,17 @@ Gem::Specification.new do |s|
   s.executables   = `git ls-files -- bin/*`.split("\n").map { |f| File.basename(f) }
   s.require_paths = ['lib']
 
-  s.add_dependency 'redis', '~> 3'
-  s.add_dependency 'redis-namespace'
-  s.add_dependency 'multi_json'
-  s.add_dependency 'connection_pool', '~> 2.0'
-  s.add_dependency 'activemodel'
+  s.add_runtime_dependency 'redis', '~> 3'
+  s.add_runtime_dependency 'redis-namespace'
+  s.add_runtime_dependency 'multi_json'
+  s.add_runtime_dependency 'connection_pool', '~> 2.0'
+  s.add_runtime_dependency 'activemodel'
   s.add_development_dependency 'rspec', '3.0.0.beta2'
   s.add_development_dependency 'guard'
   s.add_development_dependency 'guard-rspec'
   s.add_development_dependency 'mock_redis'
   s.add_development_dependency 'simplecov'
+  s.add_development_dependency 'rubocop'
+  s.add_development_dependency 'rake'
+  s.add_development_dependency 'coveralls'
 end
