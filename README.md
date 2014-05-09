@@ -1,72 +1,64 @@
 # Pushr
 
+Please note: We're in the process of updating this gem. The current code is not yet stable. Please contact us if you
+want to test or contribute to this project.
+
 [![Build Status](https://travis-ci.org/9to5/pushr-core.svg?branch=master)](https://travis-ci.org/9to5/pushr-core)
 [![Code Climate](https://codeclimate.com/github/9to5/pushr-core.png)](https://codeclimate.com/github/9to5/pushr-core)
 [![Coverage Status](https://coveralls.io/repos/9to5/pushr-core/badge.png)](https://coveralls.io/r/9to5/pushr-core)
 
 ## Features
 
+* Lightening fast push notification delivery
+* Redis for queueing
 * Multi-App
-* Multi-Provider ([APNS](https://github.com/tompesman/push-apns), [GCM](https://github.com/tompesman/push-gcm), [C2DM](https://github.com/tompesman/push-c2dm))
+* Multi-Provider ([APNS](https://github.com/9to5/pushr-apns), [GCM](https://github.com/9to5/pushr-gcm)
 * Integrated feedback processing
-* Rake task to cleanup the database
-* Database for storage (no external dependencies)
+* Multi-process
 
 ## Installation
 
-Add to your `GemFile`
+Add to your `Gemfile`
 
-    gem 'push-core'
+    gem 'pushr-core'
 
 and add the push provider to you Gemfile:
 
 For __APNS__ (iOS: Apple Push Notification Services):
 
-    gem 'push-apns'
-
-For __C2DM__ (Android: Cloud to Device Messaging, deprecated by Google, not this gem):
-
-    gem 'push-c2dm'
+    gem 'pushr-apns'
 
 For __GCM__ (Android: Google Cloud Messaging):
 
-    gem 'push-gcm'
+    gem 'pushr-gcm'
 
 And run `bundle install` to install the gems.
 
-To generate the migration and the configuration files run:
-
-    rails g push
-    bundle exec rake db:migrate
-
 ## Configuration
 
-The configuration is in the database and you add the configuration per push provider with the console (`rails c`):
+By default the gem tries to connect to a Redis instance at localhost. If you define the `PUSHR_URL` environment variable
+it will use that. The configuration is stored in Redis and you add the configuration per push provider with the console
+(`bundle console`):
 
-APNS ([see](https://github.com/tompesman/push-core#generating-certificates)):
+APNS ([see](https://github.com/9to5/pushr-core#generating-certificates)):
 ```ruby
 Pushr::ConfigurationApns.create(app: 'app_name', connections: 2, enabled: true,
-    certificate: File.read('certificate.pem'),
-    feedback_poll: 60,
-    sandbox: false)
+    certificate: File.read('certificate.pem'), feedback_poll: 60, sandbox: false)
 ```
 
-The `skip_check_for_error` parameter is optional and can be set to `true` or `false`. If set to `true` the APNS service will not check for errors when sending messages. This option should be used in a production environment and improves performance. In production the errors are reported and handled by the feedback service.
-
-C2DM ([see](https://developers.google.com/android/c2dm/)):
-```ruby
-Pushr::ConfigurationC2dm.create(app: 'app_name', connections: 2, enabled: true,
-    email: '<email address here>',
-    password: '<password here>')
-```
+The `skip_check_for_error` parameter is optional and can be set to `true` or `false`. If set to `true` the APNS service
+will not check for errors when sending messages. This option should be used in a production environment and improves
+performance. In production the errors are reported and handled by the feedback service. Please note that if you use
+sandbox devices in your production environment you should not `skip_check_for_error`.
 
 GCM ([see](http://developer.android.com/guide/google/gcm/gs.html)):
 ```ruby
-Pushr::ConfigurationGcm.create(app: 'app_name', connections: 2, enabled: true,
-    key: '<api key here>')
+Pushr::ConfigurationGcm.create(app: 'app_name', connections: 2, enabled: true, api: '<api key here>')
 ```
 
-You can have each provider per app_name and you can have more than one app_name. Use the instructions below to generate the certificate for the APNS provider. If you only want to prepare the database with the configurations, you can set the `enabled` switch to `false`. Only enabled configurations will be used by the daemon.
+You can have each provider per app_name and you can have more than one app_name. Use the instructions below to generate
+the certificate for the APNS provider. If you only want to prepare the database with the configurations, you can set the
+`enabled` switch to `false`. Only enabled configurations will be used by the daemon.
 
 ### Generating Certificates for APNS
 
@@ -76,7 +68,8 @@ You can have each provider per app_name and you can have more than one app_name.
 4. Right click and select `Export 2 items...`.
 5. Save the file as `cert.p12`, make sure the File Format is `Personal Information Exchange (p12)`.
 6. If you decide to set a password for your exported certificate, please read the Configuration section below.
-7. Convert the certificate to a .pem, where `<environment>` should be `development` or `production`, depending on the certificate you exported.
+7. Convert the certificate to a .pem, where `<environment>` should be `development` or `production`, depending on the
+certificate you exported.
 
     `openssl pkcs12 -nodes -clcerts -in cert.p12 -out <environment>.pem`
 
@@ -86,21 +79,18 @@ You can have each provider per app_name and you can have more than one app_name.
 
 To start the daemon:
 
-    bundle exec push <environment> <options>
+    bundle exec pushr <options>
 
-Where `<environment>` is your Rails environment and `<options>` can be:
+Where `<options>` can be:
 
     -f, --foreground                 Run in the foreground. Log is not written.
     -p, --pid-file PATH              Path to write PID file. Relative to Rails root unless absolute.
-    -P, --push-poll N                Frequency in seconds to check for new notifications. Default: 2.
-    -n, --error-notification         Enables error notifications via Airbrake or Bugsnag.
-    -F, --feedback-poll N            Frequency in seconds to check for feedback for the feedback processor. Default: 60. Use 0 to disable.
     -b, --feedback-processor PATH    Path to the feedback processor. Default: lib/push/feedback_processor.
     -v, --version                    Print this version of push.
     -h, --help                       You're looking at it.
 
-
 ## Sending notifications
+
 APNS:
 ```ruby
 Pushr::MessageApns.create(
@@ -112,45 +102,33 @@ Pushr::MessageApns.create(
     expiry: 1.day.to_i,
     attributes_for_device: {key: 'MSG'})
 ```
-C2DM:
-```ruby
-Pushr::MessageC2dm.create(
-    app: 'app_name',
-    device: '<C2DM registration_id here>',
-    payload: { message: 'Hello World' },
-    collapse_key: 'MSG')
-```
 
 GCM:
 ```ruby
 Pushr::MessageGcm.create(
     app: 'app_name',
-    device: '<GCM registration_id here>',
-    payload: { message: 'Hello World' },
+    registration_ids: ['<GCM registration_id here>', '<GCM registration_id here>'],
+    notification_key: 'notification_key_name',
+    delay_while_idle: true,
+    data: { message: 'Hello World' },
+    time_to_live: 24 * 60 * 60,
+    restricted_package_name: 'com.example.gcm',
+    dry_run: false,
     collapse_key: 'MSG')
 ```
 
 ## Feedback processing
 
-The push providers return feedback in various ways and these are captured and stored in the `push_feedback` table. The installer installs the `lib/push/feedback_processor.rb` file which is by default called every 60 seconds. In this file you can process the feedback which is different for every application.
-
-## Maintenance
-
-The push-core comes with a rake task to delete all the messages and feedback of the last 7 days or by the DAYS parameter.
-
-    bundle exec rake push:clean DAYS=2
+The push providers return feedback in various ways and these are captured and stored in the `push_feedback` table. The
+installer installs the `lib/push/feedback_processor.rb` file which is by default called every 60 seconds. In this file
+you can process the feedback which is different for every application.
 
 ## Heroku
 
 Push runs on Heroku with the following line in the `Procfile`.
 
-    push: bundle exec push $RACK_ENV -f
+    pushr: bundle exec pushr -f
 
 ## Prerequisites
 
-* Rails 3.2.x
 * Ruby 1.9.x
-
-## Thanks
-
-This project started as a fork of Ian Leitch [RAPNS](https://github.com/ileitch/rapns) project. The differences between this project and RAPNS is the support for C2DM and the modularity of the push providers.
