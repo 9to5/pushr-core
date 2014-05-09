@@ -42,7 +42,7 @@ module Pushr
           connection = @provider.connectiontype.new(@config, i + 1)
           connection.connect
 
-          handler = DeliveryHandler.new("pushr:#{@config.app}:#{@config.name}", connection, @config.app, i + 1)
+          handler = MessageHandler.new("pushr:#{@config.app}:#{@config.name}", connection, @config.app, i + 1)
           handler.start
           @handlers << handler
         end

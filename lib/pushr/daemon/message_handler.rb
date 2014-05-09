@@ -1,12 +1,12 @@
 module Pushr
   module Daemon
-    class DeliveryHandler
+    class MessageHandler
       attr_reader :name
 
       def initialize(queue_name, connection, name, i)
         @queue_name = queue_name
         @connection = connection
-        @name = "#{name}: DeliveryHandler #{i}"
+        @name = "#{name}: MessageHandler #{i}"
         Pushr::Daemon.logger.info "[#{@name}] listening to #{@queue_name}"
       end
 

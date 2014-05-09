@@ -38,7 +38,7 @@ describe Pushr::Daemon::App do
 
   describe 'class' do
     it 'should start configuration' do
-      expect_any_instance_of(Pushr::Daemon::DeliveryHandler).to receive(:start)
+      expect_any_instance_of(Pushr::Daemon::MessageHandler).to receive(:start)
       config.save
       app = Pushr::Daemon::App.new(config)
       app.start

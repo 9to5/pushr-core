@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'pushr/daemon'
 
-describe Pushr::Daemon::DeliveryHandler do
+describe Pushr::Daemon::MessageHandler do
 
   before(:each) do
     Pushr::Core.configure do |config|
@@ -22,7 +22,7 @@ describe Pushr::Daemon::DeliveryHandler do
     it 'should start' do
       message.save
       connection.connect
-      handler = Pushr::Daemon::DeliveryHandler.new('pushr:app_name:dummy', connection, 'app', 1)
+      handler = Pushr::Daemon::MessageHandler.new('pushr:app_name:dummy', connection, 'app', 1)
       handler.stop
       thread = handler.start
       thread.join
@@ -39,7 +39,7 @@ describe Pushr::Daemon::DeliveryHandler do
       expect_any_instance_of(Pushr::Daemon::DummySupport::ConnectionDummy).to receive(:write).and_raise(error)
       message.save
       connection.connect
-      handler = Pushr::Daemon::DeliveryHandler.new('pushr:app_name:dummy', connection, 'app', 1)
+      handler = Pushr::Daemon::MessageHandler.new('pushr:app_name:dummy', connection, 'app', 1)
       handler.stop
       thread = handler.start
       thread.join
