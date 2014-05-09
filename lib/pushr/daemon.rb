@@ -2,11 +2,13 @@ require 'thread'
 require 'logger'
 require 'multi_json'
 require 'pushr/redis_connection'
+require 'pushr/daemon/settings'
 require 'pushr/daemon/delivery_error'
 require 'pushr/daemon/message_handler'
 require 'pushr/daemon/feedback_handler'
 require 'pushr/daemon/logger'
 require 'pushr/daemon/app'
+require 'pushr/daemon/pid_file'
 
 module Pushr
   module Daemon
@@ -20,23 +22,24 @@ module Pushr
       setup_signal_hooks
 
       daemonize unless config.foreground
-      write_pid_file
 
+      start_app
+
+      logger.info('[Daemon] Ready')
+
+      sleep 1 until @shutting_down
+    end
+
+    protected
+
+    def self.start_app
       load_stats_processor
-
       App.load
       scale_redis_connections
       App.start
       self.feedback_handler = FeedbackHandler.new(config.feedback_processor)
       feedback_handler.start
-
-      logger.info('[Daemon] Ready')
-      while !@shutting_down
-        sleep 1
-      end
     end
-
-    protected
 
     def self.scale_redis_connections
       # feedback handler + app + app.totalconnections
@@ -47,9 +50,7 @@ module Pushr
     end
 
     def self.load_stats_processor
-      if config.stats_processor
-        require "#{Dir.pwd}/#{config.stats_processor}"
-      end
+      require "#{Dir.pwd}/#{config.stats_processor}" if config.stats_processor
     rescue => e
       logger.error("Failed to stats_processor: #{e.inspect}")
     end
@@ -80,13 +81,13 @@ module Pushr
         print '.'
       end
       print "\n"
-      delete_pid_file
+      PidFile.delete(config.pid_file)
     end
 
     def self.daemonize
-      exit if pid = fork
+      exit if fork
       Process.setsid
-      exit if pid = fork
+      exit if fork
 
       Dir.chdir '/'
       File.umask 0000
@@ -94,23 +95,7 @@ module Pushr
       STDIN.reopen '/dev/null'
       STDOUT.reopen '/dev/null', 'a'
       STDERR.reopen STDOUT
-    end
-
-    def self.write_pid_file
-      unless config[:pid_file].blank?
-        begin
-          File.open(config[:pid_file], 'w') do |f|
-            f.puts $PROCESS_ID
-          end
-        rescue SystemCallError => e
-          logger.error("Failed to write PID to '#{config[:pid_file]}': #{e.inspect}")
-        end
-      end
-    end
-
-    def self.delete_pid_file
-      pid_file = config[:pid_file]
-      File.delete(pid_file) if !pid_file.blank? && File.exist?(pid_file)
+      PidFile.write(config.pid_file)
     end
   end
 end
