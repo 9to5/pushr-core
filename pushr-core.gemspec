@@ -12,11 +12,14 @@ Gem::Specification.new do |s|
   s.homepage    = 'https://github.com/9to5/pushr-core'
   s.summary     = 'Core of the pushr daemon.'
   s.description = 'Pushr daemon for push notification services like APNS (iOS/Apple) and GCM/C2DM (Android).'
+  s.licenses    = ['MIT']
 
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   s.files         = `git ls-files lib`.split("\n") + ['README.md', 'MIT-LICENSE']
   s.executables   = `git ls-files -- bin/*`.split("\n").map { |f| File.basename(f) }
   s.require_paths = ['lib']
+
+  s.required_ruby_version = '>= 1.9.3'
 
   s.add_runtime_dependency 'redis', '~> 3'
   s.add_runtime_dependency 'redis-namespace'
