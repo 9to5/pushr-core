@@ -12,7 +12,7 @@ want to test or contribute to this project.
 * Lightening fast push notification delivery
 * Redis for queueing
 * Multi-App
-* Multi-Provider ([APNS](https://github.com/9to5/pushr-apns), [GCM](https://github.com/9to5/pushr-gcm)
+* Multi-Provider ([APNS](https://github.com/9to5/pushr-apns), [GCM](https://github.com/9to5/pushr-gcm))
 * Integrated feedback processing
 * Multi-process
 
