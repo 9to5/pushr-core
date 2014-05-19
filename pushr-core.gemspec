@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.email       = ['tom@tnux.net']
   s.homepage    = 'https://github.com/9to5/pushr-core'
   s.summary     = 'Core of the pushr daemon.'
-  s.description = 'Pushr daemon for push notification services like APNS (iOS/Apple) and GCM/C2DM (Android).'
+  s.description = 'Pushr daemon for push notification services like APNS (iOS/Apple) and GCM (Android).'
   s.licenses    = ['MIT']
 
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
