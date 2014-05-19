@@ -15,7 +15,7 @@ describe Pushr::Message do
   end
 
   describe 'next' do
-    let(:message) { Pushr::MessageDummy.new(app: 'app_name', device: 'test') }
+    let(:message) { Pushr::MessageDummy.new(app: 'app_name') }
     let(:message_invalid) { Pushr::MessageDummy.new }
     it 'should return true' do
       expect(message.save).to eql true

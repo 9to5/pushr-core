@@ -16,7 +16,7 @@ describe Pushr::Daemon::MessageHandler do
   end
 
   describe 'delivers message' do
-    let(:message) { Pushr::MessageDummy.new(app: 'app_name', device: 'test') }
+    let(:message) { Pushr::MessageDummy.new(app: 'app_name') }
     let(:config) { Pushr::ConfigurationDummy.new(app: 'app_name', connections: 2, enabled: true) }
     let(:connection) { Pushr::Daemon::DummySupport::ConnectionDummy.new(config, 1) }
     it 'should start' do
@@ -31,7 +31,7 @@ describe Pushr::Daemon::MessageHandler do
   end
 
   describe 'fails' do
-    let(:message) { Pushr::MessageDummy.new(app: 'app_name', device: 'test') }
+    let(:message) { Pushr::MessageDummy.new(app: 'app_name') }
     let(:config) { Pushr::ConfigurationDummy.new(app: 'app_name', connections: 2, enabled: true) }
     let(:connection) { Pushr::Daemon::DummySupport::ConnectionDummy.new(config, 1) }
     let(:error) { Pushr::Daemon::DeliveryError.new('100', message, 'desc', 'source', false) }
