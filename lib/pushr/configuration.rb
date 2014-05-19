@@ -5,6 +5,7 @@ module Pushr
     validates :app, presence: true
     validates :connections, presence: true
     validates :connections, numericality: { greater_than: 0, only_integer: true }
+    validates :enabled, inclusion: { in: [true, false] }
 
     def initialize(attributes = {})
       attributes.each do |name, value|
