@@ -1,7 +1,7 @@
 module Pushr
   module Daemon
     class DeliveryError < StandardError
-      attr_reader :code, :message, :description, :source, :notify
+      attr_reader :code, :description, :source, :notify
 
       def initialize(code, message, description, source, notify = true)
         @code = code

@@ -1,7 +1,8 @@
 module Pushr
   module Daemon
     class Settings
-      attr_accessor :foreground, :pid_file, :error_notification, :feedback_processor, :stats_processor
+      attr_reader :pid_file
+      attr_accessor :foreground, :error_notification, :feedback_processor, :stats_processor
 
       def initialize
         @foreground = false
