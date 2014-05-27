@@ -1,27 +1,25 @@
 module Pushr
   module Daemon
     class App
-      @apps = {}
+      @apps = []
 
       class << self
         attr_reader :apps
 
         def load
-          Configuration.all.each do |config|
-            @apps["#{config.app}:#{config.name}"] = App.new(config) if config.enabled == true
-          end
+          @apps = Configuration.all.keep_if { |c| c.enabled == true }.map { |c| App.new(c) }
         end
 
         def total_connections
-          @apps.values.map(&:connections).inject(0, :+)
+          @apps.map(&:connections).inject(0, :+)
         end
 
         def start
-          @apps.values.map(&:start)
+          @apps.map(&:start)
         end
 
         def stop
-          @apps.values.map(&:stop)
+          @apps.map(&:stop)
         end
       end
 
@@ -37,19 +35,10 @@ module Pushr
 
       def start
         @provider = load_provider(@config.name, @config)
-
-        @config.connections.times do |i|
-          connection = @provider.connectiontype.new(@config, i + 1)
-          connection.connect
-
-          handler = MessageHandler.new("pushr:#{@config.app}:#{@config.name}", connection, @config.app, i + 1)
-          handler.start
-          @handlers << handler
-        end
+        @provider.start
       end
 
       def stop
-        @handlers.map(&:stop)
         @provider.stop
       end
 
@@ -60,7 +49,7 @@ module Pushr
           middleware = Pushr::Daemon.const_get("#{klass}".camelize)
         rescue NameError
           message = "Could not find matching push provider for #{klass.inspect}. " \
-                    "You may need to install an additional gem (such as push-#{klass})."
+                    "You may need to install an additional gem (such as pushr-#{klass})."
           raise LoadError, message
         end
 
