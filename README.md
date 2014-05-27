@@ -43,13 +43,21 @@ it will use that. The configuration is stored in Redis and you add the configura
 APNS ([see](https://github.com/9to5/pushr-core#generating-certificates)):
 ```ruby
 Pushr::ConfigurationApns.create(app: 'app_name', connections: 2, enabled: true,
-    certificate: File.read('certificate.pem'), feedback_poll: 60, sandbox: false)
+    certificate: File.read('certificate.pem'), sandbox: false, skip_check_for_error: false)
 ```
 
-The `skip_check_for_error` parameter is optional and can be set to `true` or `false`. If set to `true` the APNS service
+The `skip_check_for_error` parameter can be set to `true` or `false`. If set to `true` the APNS service
 will not check for errors when sending messages. This option should be used in a production environment and improves
 performance. In production the errors are reported and handled by the feedback service. Please note that if you use
-sandbox devices in your production environment you should not `skip_check_for_error`.
+sandbox devices in your production environment you should not set `skip_check_for_error = true`.
+
+APNS Feedback:
+```ruby
+Pushr::ConfigurationApnsFeedback.create(app: 'app_name', connections: 1, enabled: true,
+    feedback_poll: 60)
+```
+
+Use this configuration to let a thread check for feedback on all APNS Configurations. It checks every `feedback_poll` in seconds.
 
 GCM ([see](http://developer.android.com/guide/google/gcm/gs.html)):
 ```ruby
