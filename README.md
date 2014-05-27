@@ -139,4 +139,5 @@ Push runs on Heroku with the following line in the `Procfile`.
 
 ## Prerequisites
 
-* Ruby 1.9.x
+* Ruby 1.9.3, 2.0, 2.1
+* Redis
