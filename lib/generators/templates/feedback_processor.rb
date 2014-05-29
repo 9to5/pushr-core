@@ -15,11 +15,6 @@ module Pushr
           # device = feedback.update_to
           Pushr::Daemon.logger.info('[FeedbackProcessor] Pushr::FeedbackGcm update')
         end
-      elsif feedback.instance_of? Pushr::FeedbackC2dm
-        if feedback.follow_up == 'delete'
-          # TODO: delete c2dm device
-          Pushr::Daemon.logger.info('[FeedbackProcessor] Pushr::FeedbackC2dm delete')
-        end
       elsif feedback.instance_of? Pushr::FeedbackApns
         if feedback.follow_up == 'delete'
           # TODO: delete apns device
