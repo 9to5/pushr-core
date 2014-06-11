@@ -13,8 +13,10 @@ describe Pushr::Daemon::App do
     allow(logger).to receive(:error)
     allow(logger).to receive(:warn)
     Pushr::Daemon.logger = logger
+    Pushr::Daemon.config = settings
   end
 
+  let(:settings) { Pushr::Daemon::Settings.new }
   let(:config) { Pushr::ConfigurationDummy.new(app: 'app_name', connections: 1, enabled: true) }
   describe 'self' do
     before(:each) do

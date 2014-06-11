@@ -46,5 +46,9 @@ module Pushr
       klass = hsh['type'].split('::').reduce(Object) { |a, e| a.const_get e }
       klass.new(hsh)
     end
+
+    def to_json
+      MultiJson.dump(to_hash)
+    end
   end
 end

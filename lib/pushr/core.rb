@@ -1,3 +1,4 @@
+require 'yaml'
 require 'active_model'
 require 'multi_json'
 require 'pushr/version'
