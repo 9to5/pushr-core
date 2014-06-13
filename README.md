@@ -36,6 +36,15 @@ And run `bundle install` to install the gems.
 
 ## Configuration
 
+### Via Redis or YAML File
+
+The configuration of Pushr can either be stored in Redis or in a YAML file. **The default is Redis.**
+
+If you want to use a YAML file, you need to specify it via the `-c` option of the `pushr` daemon.
+Note that this will also override any existging Redis configuration.
+
+### Redis
+
 By default the gem tries to connect to a Redis instance at localhost. If you define the `PUSHR_URL` environment variable
 it will use that. The configuration is stored in Redis and you add the configuration per push provider with the console
 (`bundle console`):
@@ -68,6 +77,72 @@ You can have each provider per app_name and you can have more than one app_name.
 the certificate for the APNS provider. If you only want to prepare the database with the configurations, you can set the
 `enabled` switch to `false`. Only enabled configurations will be used by the daemon.
 
+### YAML File
+
+If a YAML file is used for configuration, it needs to follow the structure of the example below, and may contain only the desired sections.
+The certificates will be read from files. For security reasons, you might not want to check-in the certificate files into your source code repository.
+
+
+The following example of a YAML configuration file can be found under `./lib/generators/templates/pushr.yml`.
+
+
+``` 
+# Configurations for all Pushr Gems
+
+Pushr::ConfigurationApns:
+  ios-development:
+    enabled: true
+    connections: 1
+    #
+    feedback_poll: 60
+#    skip_check_for_error: true
+    sandbox: true
+    certificate: config/pushr/ios-development.pem
+
+  ios-production:
+    enabled: true
+    connections: 1
+    #
+    feedback_poll: 60
+#    skip_check_for_error: true
+    sandbox: false
+    certificate: config/pushr/ios-production.pem
+
+  ios-beta:
+    enabled: true
+    connections: 1
+    #
+    feedback_poll: 60
+#    skip_check_for_error: true
+    sandbox: true
+    certificate: config/pushr/ios-beta.pem
+
+  ios-enterprise:
+    enabled: true
+    connections: 1
+    #
+    feedback_poll: 60
+#    skip_check_for_error: true
+    sandbox: false
+    certificate: config/pushr/ios-enterprise.pem
+
+Pushr::ConfigurationGcm:
+  android:
+    enabled: true
+    connections: 1
+    #
+    key: your-api-key-here
+
+Pushr::ConfigurationC2dm:
+  c2dm:
+    enabled: false
+    connections: 2
+    #
+    email: your@email.here
+    password: your-password-here
+
+```
+
 ### Generating Certificates for APNS
 
 1. Open up Keychain Access and select the `Certificates` category in the sidebar.
@@ -94,6 +169,7 @@ Where `<options>` can be:
     -f, --foreground                 Run in the foreground. Log is not written.
     -p, --pid-file PATH              Path to write PID file. Relative to Rails root unless absolute.
     -b, --feedback-processor PATH    Path to the feedback processor. Default: lib/push/feedback_processor.
+    -c, --configuration FILE         Read the configuration from this YAML file (optional)
     -v, --version                    Print this version of push.
     -h, --help                       You're looking at it.
 
@@ -112,6 +188,24 @@ Pushr::MessageApns.new(
     priority: 10,
     content_available: 1).save
 ```
+
+
+Silent Push Notification via APNS:
+
+```ruby
+Push::MessageApns.create(
+    app: 'app_name',
+    device: '<APNS device_token here>',
+    alert: nil,
+    sound: nil,
+    badge: 1,
+    content_available: 1,   # see footnote
+    expiry: 1.day.to_i, 
+    attributes_for_device: nil)
+```
+
+Use `content_available: 1` if the iOS device should start your app upon receiving the silent push notification.
+
 
 GCM:
 ```ruby

@@ -16,7 +16,7 @@ ARGV.options do |opts|
     settings.foreground = true
   end
 
-  opts.on('-c FILE', '--configuration FILE', 'Get the configuration from this YAML file') do |file|
+  opts.on('-c FILE', '--configuration FILE', 'Read the configuration from this YAML file') do |file|
     settings.configuration_file = file
   end
 

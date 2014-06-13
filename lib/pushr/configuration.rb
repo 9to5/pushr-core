@@ -1,6 +1,7 @@
 module Pushr
   class Configuration
     include ActiveModel::Validations
+    @@configurations = []
 
     validates :app, presence: true
     validates :connections, presence: true
@@ -11,6 +12,8 @@ module Pushr
       attributes.each do |name, value|
         send("#{name}=", value) if respond_to?("#{name}=")
       end
+      @@configurations << self
+      self
     end
 
     def key
@@ -31,6 +34,8 @@ module Pushr
     end
 
     def self.all
+      return @@configurations if ! @@configurations.empty? # in case somebody calls this when using a YAML file
+
       configurations = Pushr::Core.redis { |conn| conn.hgetall('pushr:configurations') }
       configurations.each { |key, config| configurations[key] = instantiate(config, key) }
       configurations.values

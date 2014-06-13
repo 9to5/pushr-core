@@ -22,6 +22,8 @@ module Pushr
           filename = File.join(Dir.pwd,filename) if ! Pathname.new(filename).absolute?
           if File.file?(filename)
             @configuration_file = filename
+          else
+            Pushr::Daemon.logger.error("can not find config file: #{filename}")
           end
         end
       end
@@ -29,15 +31,30 @@ module Pushr
       def configurations
         if configuration_file
           configs = File.open(configuration_file) { |fd| YAML.load(fd) }
-          configs.map do |hsh|
-            klass = hsh['type'].split('::').reduce(Object) { |a, e| a.const_get e }
-            klass.new(hsh)
+          configs.each do |klass_name,hash|
+            klass = Kernel.const_get(klass_name)
+
+            hash.each do |app,settings_hash|
+              settings_hash['app'] = app
+              # if a certificate is mentioned in the YAML file, treat it as a filename, and load the Certificate
+              if settings_hash['certificate']
+                filename = settings_hash['certificate']
+                if ! Pathname.new(filename).absolute?
+                  filename = File.join(  defined?(Rails) && !Rails.root.nil? ? Rails.root : Dir.pwd , filename)
+                end
+                settings_hash['certificate'] = File.read( filename )
+              end
+              # instanciate the new Pushr::Configuration (sub-)class:
+              klass.new(settings_hash)
+            end
           end
           Pushr::Daemon.logger.info("read config file: #{configuration_file}")
         else
+          # read persisted configurations from Redis:
           Pushr::Configuration.all
         end
       end
+
     end
   end
 end
