@@ -1,0 +1,61 @@
+# Configurations for all Pushr Gems
+---
+
+# Android Messaging:
+
+- type: Pushr::ConfigurationGcm
+  app: gcm-development
+  enabled: true
+  connections: 1
+  api: your-api-key-here
+
+
+# Feedback Service for all APNS Connections:
+
+- type: Pushr::ConfigurationApnsFeedback
+  app: apns-feedback
+  enabled: true
+  connections: 1
+  feedback_poll: 300 # seconds
+
+# Apple Messaging:
+
+- type: Pushr::ConfigurationApns
+  app: ios-development
+  enabled: true
+  connections: 1
+  skip_check_for_error: false
+  sandbox: true
+  certificate: filename.pem
+
+- type: Pushr::ConfigurationApns
+  app: ios-development
+  enabled: true
+  connections: 1
+#    skip_check_for_error: true
+  sandbox: true
+  certificate: pushr/ios-development.pem
+
+- type: Pushr::ConfigurationApns
+  app: ios-production
+  enabled: true
+  connections: 1
+#    skip_check_for_error: true
+  sandbox: false
+  certificate: pushr/ios-production.pem
+
+- type: Pushr::ConfigurationApns
+  app: ios-beta
+  enabled: true
+  connections: 1
+#    skip_check_for_error: true
+  sandbox: true
+  certificate: pushr/ios-beta.pem
+
+- type: Pushr::ConfigurationApns
+  app: ios-enterprise
+  enabled: true
+  connections: 1
+#    skip_check_for_error: true
+  sandbox: false
+  certificate: pushr/ios-enterprise.pem

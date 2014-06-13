@@ -1,7 +1,7 @@
 module Pushr
   module Daemon
     class Settings
-      attr_reader :pid_file, :configuration_path
+      attr_reader :pid_file, :configuration_file
       attr_accessor :foreground, :error_notification, :feedback_processor, :stats_processor
 
       def initialize
@@ -10,28 +10,24 @@ module Pushr
         @feedback_processor = nil
         @stats_processor = nil
         @pid_file = nil
-        @configuration_path = nil
+        @configuration_file = nil
       end
 
       def pid_file=(arg)
         @pid_file = File.join(Dir.pwd, arg) if arg && !Pathname.new(arg).absolute?
       end
 
-      def configuration_path=(arg)
-        @configuration_path = File.join(Dir.pwd, arg) if arg && !Pathname.new(arg).absolute?
-      end
-
-      def configurations
-        if configuration_path
-          configs = File.open('config.yml') { |fd| YAML.load(fd) }
-          configs.map do |hsh|
-            klass = hsh['type'].split('::').reduce(Object) { |a, e| a.const_get e }
-            klass.new(hsh)
+      def configuration_file=(filename)
+        if filename
+          filename = File.join(Dir.pwd,filename) if ! Pathname.new(filename).absolute?
+          if File.file?(filename)
+            @configuration_file = filename
+          else
+            Pushr::Daemon.logger.error("can not find config file: #{filename}")
           end
-        else
-          Pushr::Configuration.all
         end
       end
+
     end
   end
 end

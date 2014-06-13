@@ -36,6 +36,16 @@ And run `bundle install` to install the gems.
 
 ## Configuration
 
+### Via Redis or YAML File
+
+The configuration of Pushr can either be stored in Redis or in a YAML file. **The default is Redis.**
+
+If you want to use a YAML file, you need to specify it via the `-c` option of the `pushr` daemon.
+Note that this will also override any existing Redis configuration.
+APNS certificates can be loaded from file. If a relative file name is given, it's assumed to be relative to the same path as the YAML config file.
+
+### Redis
+
 By default the gem tries to connect to a Redis instance at localhost. If you define the `PUSHR_URL` environment variable
 it will use that. The configuration is stored in Redis and you add the configuration per push provider with the console
 (`bundle console`):
@@ -68,6 +78,82 @@ You can have each provider per app_name and you can have more than one app_name.
 the certificate for the APNS provider. If you only want to prepare the database with the configurations, you can set the
 `enabled` switch to `false`. Only enabled configurations will be used by the daemon.
 
+### YAML File
+
+If a YAML file is used for configuration, it needs to follow the structure of the example below, and may contain only the desired sections.
+
+The certificates will be read from files. For security reasons, you might not want to check-in the certificate files into your source code repository.
+
+If no absolute path is given of the PEM files, the location is assumed to be relative to the location of the YAML file.
+
+The following example of a YAML configuration file can be found under `./lib/generators/templates/pushr.yml`.
+
+
+``` 
+# Configurations for all Pushr Gems
+---
+
+# Android Messaging:
+
+- type: Pushr::ConfigurationGcm
+  app: gcm-development
+  enabled: true
+  connections: 1
+  api: your-api-key-here
+
+
+# Feedback Service for all APNS Connections:
+
+- type: Pushr::ConfigurationApnsFeedback
+  app: apns-feedback
+  enabled: true
+  connections: 1
+  feedback_poll: 300 # seconds
+
+# Apple Messaging:
+
+- type: Pushr::ConfigurationApns
+  app: ios-development
+  enabled: true
+  connections: 1
+  skip_check_for_error: false
+  sandbox: true
+  certificate: filename.pem
+
+- type: Pushr::ConfigurationApns
+  app: ios-development
+  enabled: true
+  connections: 1
+#    skip_check_for_error: true
+  sandbox: true
+  certificate: pushr/ios-development.pem
+
+- type: Pushr::ConfigurationApns
+  app: ios-production
+  enabled: true
+  connections: 1
+#    skip_check_for_error: true
+  sandbox: false
+  certificate: pushr/ios-production.pem
+
+- type: Pushr::ConfigurationApns
+  app: ios-beta
+  enabled: true
+  connections: 1
+#    skip_check_for_error: true
+  sandbox: true
+  certificate: pushr/ios-beta.pem
+
+- type: Pushr::ConfigurationApns
+  app: ios-enterprise
+  enabled: true
+  connections: 1
+#    skip_check_for_error: true
+  sandbox: false
+  certificate: pushr/ios-enterprise.pem
+
+```
+
 ### Generating Certificates for APNS
 
 1. Open up Keychain Access and select the `Certificates` category in the sidebar.
@@ -94,6 +180,7 @@ Where `<options>` can be:
     -f, --foreground                 Run in the foreground. Log is not written.
     -p, --pid-file PATH              Path to write PID file. Relative to Rails root unless absolute.
     -b, --feedback-processor PATH    Path to the feedback processor. Default: lib/push/feedback_processor.
+    -c, --configuration FILE         Read the configuration from this YAML file (optional)
     -v, --version                    Print this version of push.
     -h, --help                       You're looking at it.
 
@@ -112,6 +199,24 @@ Pushr::MessageApns.new(
     priority: 10,
     content_available: 1).save
 ```
+
+
+Silent Push Notification via APNS:
+
+```ruby
+Push::MessageApns.create(
+    app: 'app_name',
+    device: '<APNS device_token here>',
+    alert: nil,
+    sound: nil,
+    badge: 1,
+    content_available: 1,   # see footnote
+    expiry: 1.day.to_i, 
+    attributes_for_device: nil)
+```
+
+Use `content_available: 1` if the iOS device should start your app upon receiving the silent push notification.
+
 
 GCM:
 ```ruby
