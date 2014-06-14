@@ -1,0 +1,53 @@
+# Configurations for all Pushr Gems
+
+Pushr::ConfigurationApns:
+  ios-development:
+    enabled: true
+    connections: 1
+    #
+    feedback_poll: 60
+#    skip_check_for_error: true
+    sandbox: true
+    certificate: config/pushr/ios-development.pem
+
+  ios-production:
+    enabled: true
+    connections: 1
+    #
+    feedback_poll: 60
+#    skip_check_for_error: true
+    sandbox: false
+    certificate: config/pushr/ios-production.pem
+
+  ios-beta:
+    enabled: true
+    connections: 1
+    #
+    feedback_poll: 60
+#    skip_check_for_error: true
+    sandbox: true
+    certificate: config/pushr/ios-beta.pem
+
+  ios-enterprise:
+    enabled: true
+    connections: 1
+    #
+    feedback_poll: 60
+#    skip_check_for_error: true
+    sandbox: false
+    certificate: config/pushr/ios-enterprise.pem
+
+Pushr::ConfigurationGcm:
+  android:
+    enabled: true
+    connections: 1
+    #
+    key: your-api-key-here
+
+Pushr::ConfigurationC2dm:
+  c2dm:
+    enabled: false
+    connections: 2
+    #
+    email: your@email.here
+    password: your-password-here
