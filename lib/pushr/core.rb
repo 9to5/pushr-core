@@ -53,6 +53,21 @@ module Pushr
       options[:external_id_tag]
     end
 
+    def self.configuration_file
+      options[:configuration_file]
+    end
+
+    def self.configuration_file=(filename)
+      if filename
+        filename = File.join(Dir.pwd, filename) unless Pathname.new(filename).absolute?
+        if File.file?(filename)
+          options[:configuration_file] = filename
+        else
+          Pushr::Daemon.logger.error("can not find config file: #{filename}")
+        end
+      end
+    end
+
     # instruments with a block
     def self.instrument(name, payload = {}, &block)
       ActiveSupport::Notifications.instrument(name, payload) do

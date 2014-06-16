@@ -68,6 +68,7 @@ Pushr::ConfigurationApnsFeedback.new(app: 'app_name', connections: 1, enabled: t
 ```
 
 Use this configuration to let a thread check for feedback on all APNS Configurations. It checks every `feedback_poll` in seconds.
+There should be only one instance of this configuration type.
 
 GCM ([see](http://developer.android.com/guide/google/gcm/gs.html)):
 ```ruby
@@ -80,78 +81,19 @@ the certificate for the APNS provider. If you only want to prepare the database 
 
 ### YAML File
 
-If a YAML file is used for configuration, it needs to follow the structure of the example below, and may contain only the desired sections.
+If a YAML file is used for configuration, it needs to follow the structure of the example below, and may contain only the
+desired sections. The certificates will be read from files. For security reasons, you might not want to check-in the certificate
+files into your source code repository.
 
-The certificates will be read from files. For security reasons, you might not want to check-in the certificate files into your source code repository.
+If no absolute path is given of the PEM files, the location is assumed to be relative to the location of the YAML file. An example
+of a YAML configuration file can be found under `./lib/generators/templates/pushr.yml`.
 
-If no absolute path is given of the PEM files, the location is assumed to be relative to the location of the YAML file.
+If you are using `Pushr` with Rails, add this to your `config/initializers/pushr.rb` file:
 
-The following example of a YAML configuration file can be found under `./lib/generators/templates/pushr.yml`.
-
-
-``` 
-# Configurations for all Pushr Gems
----
-
-# Android Messaging:
-
-- type: Pushr::ConfigurationGcm
-  app: gcm-development
-  enabled: true
-  connections: 1
-  api: your-api-key-here
-
-
-# Feedback Service for all APNS Connections:
-
-- type: Pushr::ConfigurationApnsFeedback
-  app: apns-feedback
-  enabled: true
-  connections: 1
-  feedback_poll: 300 # seconds
-
-# Apple Messaging:
-
-- type: Pushr::ConfigurationApns
-  app: ios-development
-  enabled: true
-  connections: 1
-  skip_check_for_error: false
-  sandbox: true
-  certificate: filename.pem
-
-- type: Pushr::ConfigurationApns
-  app: ios-development
-  enabled: true
-  connections: 1
-#    skip_check_for_error: true
-  sandbox: true
-  certificate: pushr/ios-development.pem
-
-- type: Pushr::ConfigurationApns
-  app: ios-production
-  enabled: true
-  connections: 1
-#    skip_check_for_error: true
-  sandbox: false
-  certificate: pushr/ios-production.pem
-
-- type: Pushr::ConfigurationApns
-  app: ios-beta
-  enabled: true
-  connections: 1
-#    skip_check_for_error: true
-  sandbox: true
-  certificate: pushr/ios-beta.pem
-
-- type: Pushr::ConfigurationApns
-  app: ios-enterprise
-  enabled: true
-  connections: 1
-#    skip_check_for_error: true
-  sandbox: false
-  certificate: pushr/ios-enterprise.pem
-
+```ruby
+Pushr::Core.configure do |config|
+  config.configuration_file = File.join(Rails.env , 'config/pushr/config.yaml')
+end
 ```
 
 ### Generating Certificates for APNS
@@ -211,7 +153,7 @@ Push::MessageApns.create(
     sound: nil,
     badge: 1,
     content_available: 1,   # see footnote
-    expiry: 1.day.to_i, 
+    expiry: 1.day.to_i,
     attributes_for_device: nil)
 ```
 
@@ -240,17 +182,24 @@ you can process the feedback which is different for every application.
 
 ## Tracking your own Message IDs
 
-If you have your own message-IDs for notifications in your system and want to track them throughout the message delivery, so they show up in all the logs you can add this during message creation:
-
-    external_id: your_external_id_here
+If you have your own message-IDs for notifications in your system and want to track them throughout the message delivery, so they
+show up in all the logs you can add this during message creation:
+```ruby
+  external_id: your_external_id_here
+```
 
 You can also set the prefix under which your message ID will show up in the logs:
-
-    Pushr::Core.external_id_tag = "MyID"   # will pre-fix the above message ID with this string
+```ruby
+Pushr::Core.configure do |config|
+  config.external_id_tag = 'MyID' # will pre-fix the above message ID with this string
+end
+```
 
 This can be useful if you want to automatically ingest your log files for analytics.
 
-Furthermore you can hand your message-ID to the mobile device, so it can either log it, or the mobile device can return a call to an API endpoint to record the time the message was actually received. This way you can measure end-to-end delivery times. This works best for silent push notifications in APNS.
+Furthermore you can hand your message-ID to the mobile device, so it can either log it, or the mobile device can return a call to
+an API endpoint to record the time the message was actually received. This way you can measure end-to-end delivery times. This
+works best for silent push notifications in APNS.
 
 ## Heroku
 
