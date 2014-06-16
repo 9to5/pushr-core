@@ -92,7 +92,7 @@ If you are using `Pushr` with Rails, add this to your `config/initializers/pushr
 
 ```ruby
 Pushr::Core.configure do |config|
-  config.configuration_file = File.join(Rails.env , 'config/pushr/config.yaml')
+  config.configuration_file = File.join(Rails.root , 'config/pushr/config.yaml')
 end
 ```
 
