@@ -10,12 +10,15 @@ require 'pushr/redis_connection'
 module Pushr
 
   module Core
+    class ConfigurationError; end
+
     NAME = 'Pushr'
     DEFAULTS = {}
 
     attr_writer :options
 
     @@external_id_tag = 'external_id'
+    @@configuration_file = nil
 
     def self.external_id_tag=(value)
       @@external_id_tag = value
@@ -23,6 +26,20 @@ module Pushr
 
     def self.external_id_tag
       @@external_id_tag
+    end
+
+    def self.configuration_file=(filename)
+      if filename
+      filename = File.join(Dir.pwd,filename) if ! Pathname.new(filename).absolute?
+      if File.file?(filename)
+        @@configuration_file = filename
+      else
+        raise ConfigurationError.new("config file does not exist: #{filename}")
+      end
+    end
+
+    def self.configuration_file
+      @@configuration_file
     end
 
     def self.options

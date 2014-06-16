@@ -30,7 +30,7 @@ module Pushr
     end
 
     def self.all
-      if Pushr::Daemon.config.configuration_file # only set if file exists
+      if Pushr::Core.configuration_file # only set if file exists
         read_from_yaml_file
       else
         read_from_redis
@@ -48,8 +48,8 @@ module Pushr
 
     private
 
-    def read_from_yaml_file
-      filename = Pushr::Daemon.config.configuration_file
+    def self.read_from_yaml_file
+      filename = Pushr::Core.configuration_file
       configs = File.open(filename) { |fd| YAML.load(fd) }
       configs.map do |hsh|
         klass = hsh['type'].split('::').reduce(Object) { |a, e| a.const_get e }
@@ -57,7 +57,7 @@ module Pushr
       end
     end
 
-    def read_from_redis
+    def self.read_from_redis
       configurations = Pushr::Core.redis { |conn| conn.hgetall('pushr:configurations') }
       configurations.each { |key, config| configurations[key] = instantiate(config, key) }
       configurations.values

@@ -36,6 +36,7 @@ And run `bundle install` to install the gems.
 
 ## Configuration
 
+
 ### Via Redis or YAML File
 
 The configuration of Pushr can either be stored in Redis or in a YAML file. **The default is Redis.**
@@ -89,7 +90,7 @@ If no absolute path is given of the PEM files, the location is assumed to be rel
 The following example of a YAML configuration file can be found under `./lib/generators/templates/pushr.yml`.
 
 
-``` 
+```
 # Configurations for all Pushr Gems
 ---
 
@@ -154,6 +155,10 @@ The following example of a YAML configuration file can be found under `./lib/gen
 
 ```
 
+If you are using `Pushr` with Rails, add this to your `application.rb` file:
+
+      Pushr::Core.configuration_file = File.join(Rails.env , 'config/pushr/config.yaml')
+
 ### Generating Certificates for APNS
 
 1. Open up Keychain Access and select the `Certificates` category in the sidebar.
@@ -211,7 +216,7 @@ Push::MessageApns.create(
     sound: nil,
     badge: 1,
     content_available: 1,   # see footnote
-    expiry: 1.day.to_i, 
+    expiry: 1.day.to_i,
     attributes_for_device: nil)
 ```
 
@@ -231,6 +236,7 @@ Pushr::MessageGcm.new(
     dry_run: false,
     collapse_key: 'MSG').save
 ```
+
 
 ## Feedback processing
 

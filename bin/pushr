@@ -17,7 +17,7 @@ ARGV.options do |opts|
   end
 
   opts.on('-c FILE', '--configuration FILE', 'Read the configuration from this YAML file') do |file|
-    settings.configuration_file = file
+    Pushr::Core.configuration_file = file
   end
 
   opts.on('-p PATH', '--pid-file PATH', String,
