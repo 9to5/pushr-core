@@ -7,7 +7,7 @@ module Pushr
         attr_reader :apps
 
         def load
-          @apps = Configuration.all.keep_if { |c| c.enabled == true }.map { |c| App.new(c) }
+          @apps = Pushr::Configuration.all.keep_if { |c| c.enabled == true }.map { |c| App.new(c) }
         end
 
         def total_connections

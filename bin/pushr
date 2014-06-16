@@ -16,6 +16,10 @@ ARGV.options do |opts|
     settings.foreground = true
   end
 
+  opts.on('-c FILE', '--configuration FILE', 'Read the configuration from this YAML file') do |file|
+    settings.configuration_file = file
+  end
+
   opts.on('-p PATH', '--pid-file PATH', String,
           'Path to write PID file. Relative to current directory unless absolute.') do |path|
             settings.pid_file = path
