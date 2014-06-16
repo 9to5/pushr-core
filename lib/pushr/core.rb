@@ -8,22 +8,11 @@ require 'pushr/feedback'
 require 'pushr/redis_connection'
 
 module Pushr
-
   module Core
     NAME = 'Pushr'
-    DEFAULTS = {}
+    DEFAULTS = { external_id_tag: 'external_id' }
 
     attr_writer :options
-
-    @@external_id_tag = 'external_id'
-
-    def self.external_id_tag=(value)
-      @@external_id_tag = value
-    end
-
-    def self.external_id_tag
-      @@external_id_tag
-    end
 
     def self.options
       @options ||= DEFAULTS.dup
@@ -54,6 +43,14 @@ module Pushr
       else
         fail ArgumentError, 'redis= requires a Hash or ConnectionPool'
       end
+    end
+
+    def self.external_id_tag=(value)
+      options[:external_id_tag] = value
+    end
+
+    def self.external_id_tag
+      options[:external_id_tag]
     end
 
     # instruments with a block
