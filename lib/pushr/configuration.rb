@@ -48,27 +48,25 @@ module Pushr
 
     private
 
-      def read_from_yaml_file
-        filename = Pushr::Daemon.config.configuration_file
-        configs = File.open( filename ) { |fd| YAML.load(fd) }
-          configs.map do |hsh|
-            klass = hsh['type'].split('::').reduce(Object) { |a, e| a.const_get e }
-            klass.new(hsh)
-          end
-        end
-      end
-
-      def read_from_redis
-        configurations = Pushr::Core.redis { |conn| conn.hgetall('pushr:configurations') }
-        configurations.each { |key, config| configurations[key] = instantiate(config, key) }
-        configurations.values
-      end
-
-      def self.instantiate(config, id)
-        hsh = ::MultiJson.load(config).merge!(id: id)
+    def read_from_yaml_file
+      filename = Pushr::Daemon.config.configuration_file
+      configs = File.open(filename) { |fd| YAML.load(fd) }
+      configs.map do |hsh|
         klass = hsh['type'].split('::').reduce(Object) { |a, e| a.const_get e }
         klass.new(hsh)
       end
+    end
 
+    def read_from_redis
+      configurations = Pushr::Core.redis { |conn| conn.hgetall('pushr:configurations') }
+      configurations.each { |key, config| configurations[key] = instantiate(config, key) }
+      configurations.values
+    end
+
+    def self.instantiate(config, id)
+      hsh = ::MultiJson.load(config).merge!(id: id)
+      klass = hsh['type'].split('::').reduce(Object) { |a, e| a.const_get e }
+      klass.new(hsh)
+    end
   end
 end
