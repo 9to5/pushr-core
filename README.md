@@ -141,7 +141,7 @@ If you have your own message-IDs for notifications in your system and want to tr
 
 You can also set the prefix under which your message ID will show up in the logs:
 
-    Push.external_id_tag = "MyID"   # will pre-fix the above message ID with this string
+    Pushr.external_id_tag = "MyID"   # will pre-fix the above message ID with this string
 
 This can be useful if you want to automatically ingest your log files for analytics.
 
