@@ -46,9 +46,7 @@ module Pushr
       instantiate(config, key)
     end
 
-    private
-
-    def read_from_yaml_file
+    def self.read_from_yaml_file
       filename = Pushr::Daemon.config.configuration_file
       configs = File.open(filename) { |fd| YAML.load(fd) }
       configs.map do |hsh|
@@ -57,7 +55,7 @@ module Pushr
       end
     end
 
-    def read_from_redis
+    def self.read_from_redis
       configurations = Pushr::Core.redis { |conn| conn.hgetall('pushr:configurations') }
       configurations.each { |key, config| configurations[key] = instantiate(config, key) }
       configurations.values
