@@ -21,8 +21,8 @@ module Pushr
     ##
     # Configuration for Pushr, use like:
     #
-    #   Pushr.configure do |config|
-    #     config.redis = { :namespace => 'myapp', :size => 1, :url => 'redis://myhost:8877/mydb' }
+    #   Pushr::Core.configure do |config|
+    #     config.redis = { namespace: 'myapp', size: 1, url: 'redis://myhost:8877/mydb' }
     #   end
     def self.configure
       yield self
