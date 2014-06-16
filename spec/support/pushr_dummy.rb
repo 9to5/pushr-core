@@ -13,7 +13,7 @@ module Pushr
           connection = DummySupport::ConnectionDummy.new(configuration, i + 1)
           connection.connect
 
-          handler = MessageHandler.new("pushr:#{configuration.app}:#{configuration.name}", connection, configuration.app, i + 1)
+          handler = MessageHandler.new("pushr:#{configuration.key}", connection, configuration.app, i + 1)
           handler.start
           @handlers << handler
         end
