@@ -7,11 +7,22 @@ require 'pushr/feedback'
 require 'pushr/redis_connection'
 
 module Pushr
+
   module Core
     NAME = 'Pushr'
     DEFAULTS = {}
 
     attr_writer :options
+
+    @@external_id_tag = 'external_id'
+
+    def self.external_id_tag=(value)
+      @@external_id_tag = value
+    end
+
+    def self.external_id_tag
+      @@external_id_tag
+    end
 
     def self.options
       @options ||= DEFAULTS.dup
