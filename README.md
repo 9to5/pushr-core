@@ -133,6 +133,20 @@ The push providers return feedback in various ways and these are captured and st
 installer installs the `lib/push/feedback_processor.rb` file which is by default called every 60 seconds. In this file
 you can process the feedback which is different for every application.
 
+## Tracking your own Message IDs
+
+If you have your own message-IDs for notifications in your system and want to track them throughout the message delivery, so they show up in all the logs you can add this during message creation:
+
+    external_id: your_external_id_here
+
+You can also set the prefix under which your message ID will show up in the logs:
+
+    Push.external_id_tag = "MyID"   # will pre-fix the above message ID with this string
+
+This can be useful if you want to automatically ingest your log files for analytics.
+
+Furthermore you can hand your message-ID to the mobile device, so it can either log it, or the mobile device can return a call to an API endpoint to record the time the message was actually received. This way you can measure end-to-end delivery times. This works best for silent push notifications in APNS.
+
 ## Heroku
 
 Push runs on Heroku with the following line in the `Procfile`.

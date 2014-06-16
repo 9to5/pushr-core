@@ -7,6 +7,17 @@ require 'pushr/feedback'
 require 'pushr/redis_connection'
 
 module Pushr
+  @@external_id_tag = 'external_id'
+
+  def self.external_id_tag=(value)
+    @@external_id_tag = value
+  end
+
+  def self.external_id_tag
+    @@external_id_tag
+  end
+
+
   module Core
     NAME = 'Pushr'
     DEFAULTS = {}
