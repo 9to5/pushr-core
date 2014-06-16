@@ -29,6 +29,10 @@ module Pushr
       Pushr::Core.redis { |conn| conn.hdel('pushr:configurations', key) }
     end
 
+    def to_json
+      MultiJson.dump(to_hash)
+    end
+
     def self.all
       if Pushr::Daemon.config.configuration_file # only set if file exists
         read_from_yaml_file
@@ -40,10 +44,6 @@ module Pushr
     def self.find(key)
       config = Pushr::Core.redis { |conn| conn.hget('pushr:configurations', key) }
       instantiate(config, key)
-    end
-
-    def to_json
-      MultiJson.dump(to_hash)
     end
 
     private

@@ -6,17 +6,8 @@ module Pushr
       :dummy
     end
 
-    def to_json(args = nil)
-      hsh = {
-        id: [@app, name].join(':'),
-        type: self.class.to_s,
-        app: app,
-        enabled: enabled,
-        connections: connections,
-        test_attr: test_attr
-      }
-
-      ::MultiJson.dump(hsh)
+    def to_hash(_ = nil)
+      { id: [@app, name].join(':'), type: self.class.to_s, app: app, enabled: enabled, connections: connections, test_attr: test_attr }
     end
   end
 end

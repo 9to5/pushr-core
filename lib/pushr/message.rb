@@ -19,6 +19,10 @@ module Pushr
       end
     end
 
+    def to_json
+      MultiJson.dump(to_hash)
+    end
+
     def self.next(queue_name, timeout = 3)
       Pushr::Core.redis do |conn|
         message = conn.blpop(queue_name, timeout: timeout)

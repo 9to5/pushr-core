@@ -6,8 +6,8 @@ module Pushr
     def to_message
     end
 
-    def to_json(args = nil)
-      MultiJson.dump(type: self.class.to_s, app: app)
+    def to_hash(_ = nil)
+      { type: self.class.to_s, app: app }
     end
   end
 end
