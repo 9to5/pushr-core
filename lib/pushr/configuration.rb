@@ -1,6 +1,8 @@
 module Pushr
   class Configuration
     include ActiveModel::Validations
+
+    attr_accessor :id, :type, :app, :enabled, :connections
     validates :app, presence: true
     validates :connections, presence: true
     validates :connections, numericality: { greater_than: 0, only_integer: true }

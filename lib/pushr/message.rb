@@ -2,6 +2,7 @@ module Pushr
   class Message
     include ActiveModel::Validations
 
+    attr_accessor :type, :app, :external_id
     validates :app, presence: true
 
     def initialize(attributes = {})

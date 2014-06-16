@@ -1,6 +1,6 @@
 module Pushr
   class ConfigurationDummy < Pushr::Configuration
-    attr_accessor :id, :type, :app, :enabled, :connections, :test_attr
+    attr_accessor :test_attr
 
     def name
       :dummy
