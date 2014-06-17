@@ -45,26 +45,26 @@ module Pushr
 
     def self.find(key)
       config = Pushr::Core.redis { |conn| conn.hget('pushr:configurations', key) }
-      instantiate(config, key)
+      instantiate_json(config, key)
     end
 
     def self.read_from_yaml_file
       filename = Pushr::Core.configuration_file
       configs = File.open(filename) { |fd| YAML.load(fd) }
-      configs.map do |hsh|
-        klass = hsh['type'].split('::').reduce(Object) { |a, e| a.const_get e }
-        klass.new(hsh)
-      end
+      configs.map { |hsh| instantiate(hsh) }
     end
 
     def self.read_from_redis
       configurations = Pushr::Core.redis { |conn| conn.hgetall('pushr:configurations') }
-      configurations.each { |key, config| configurations[key] = instantiate(config, key) }
+      configurations.each { |key, config| configurations[key] = instantiate_json(config, key) }
       configurations.values
     end
 
-    def self.instantiate(config, id)
-      hsh = ::MultiJson.load(config).merge!(id: id)
+    def self.instantiate_json(config, id)
+      instantiate(::MultiJson.load(config).merge!(id: id))
+    end
+
+    def self.instantiate(hsh)
       klass = hsh['type'].split('::').reduce(Object) { |a, e| a.const_get e }
       klass.new(hsh)
     end
