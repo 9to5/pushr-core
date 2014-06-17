@@ -121,7 +121,7 @@ Where `<options>` can be:
 
     -f, --foreground                 Run in the foreground. Log is not written.
     -p, --pid-file PATH              Path to write PID file. Relative to Rails root unless absolute.
-    -b, --feedback-processor PATH    Path to the feedback processor. Default: lib/push/feedback_processor.
+    -b, --feedback-processor PATH    Path to the feedback processor. Default: lib/pushr/feedback_processor.
     -c, --configuration FILE         Read the configuration from this YAML file (optional)
     -v, --version                    Print this version of push.
     -h, --help                       You're looking at it.
@@ -177,7 +177,7 @@ Pushr::MessageGcm.new(
 ## Feedback processing
 
 The push providers return feedback in various ways and these are captured and stored in the `push_feedback` table. The
-installer installs the `lib/push/feedback_processor.rb` file which is by default called every 60 seconds. In this file
+installer installs the `lib/pushr/feedback_processor.rb` file which is by default called every 60 seconds. In this file
 you can process the feedback which is different for every application.
 
 ## Tracking your own Message IDs
