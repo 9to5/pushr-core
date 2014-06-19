@@ -8,7 +8,6 @@ module Pushr
       url = options[:url] || determine_redis_provider || 'redis://localhost:6379/0'
       driver = options[:driver] || 'ruby'
       # need a connection for Fetcher and Retry
-      # size = options[:size] || (Pushr.server? ? (Pushr.options[:concurrency] + 2) : 5)
       size = options[:size] || 5
       namespace = options[:namespace] || Pushr::Core.options[:namespace]
 
