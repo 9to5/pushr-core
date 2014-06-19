@@ -63,7 +63,7 @@ module Pushr
         if File.file?(filename)
           options[:configuration_file] = filename
         else
-          Pushr::Daemon.logger.error("can not find config file: #{filename}")
+          fail ArgumentError, "can not find config file: #{filename}"
         end
       end
     end
