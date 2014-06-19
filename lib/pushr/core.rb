@@ -69,7 +69,7 @@ module Pushr
     end
 
     # instruments with a block
-    def self.instrument(name, payload = {}, &block)
+    def self.instrument(name, payload = {})
       ActiveSupport::Notifications.instrument(name, payload) do
         yield
       end
