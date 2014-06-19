@@ -9,6 +9,7 @@ require 'pushr/daemon'
 
 settings = Pushr::Daemon::Settings.new
 banner = 'Usage: pushr [options]'
+connection = {}
 ARGV.options do |opts|
   opts.banner = banner
 
@@ -18,6 +19,18 @@ ARGV.options do |opts|
 
   opts.on('-c FILE', '--configuration FILE', 'Read the configuration from this YAML file') do |file|
     Pushr::Core.configuration_file = file
+  end
+
+  opts.on('-o HOST', '--redis-host HOST', String, 'Hostname of redis instance') do |host|
+    connection[:host] = host
+  end
+
+  opts.on('-r PORT', '--redis-port PORT', String, 'Port of redis instance') do |port|
+    connection[:port] = port
+  end
+
+  opts.on('-n NAMESPACE', '--redis-namespace NAMESPACE', String, 'Namespace on redis connection') do |namespace|
+    connection[:namespace] = namespace
   end
 
   opts.on('-p PATH', '--pid-file PATH', String,
@@ -46,6 +59,13 @@ ARGV.options do |opts|
   end
 
   opts.parse!
+end
+
+Pushr::Core.configure do |config|
+  x = { }
+  x[:namespace] = connection[:namespace] if connection[:namespace]
+  x[:url] = "redis://#{connection[:host]}:#{connection[:port] || 6379}/0" if connection[:host]
+  config.redis = x
 end
 
 if ENV['AIRBRAKE_API_KEY']

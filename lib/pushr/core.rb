@@ -22,7 +22,7 @@ module Pushr
     # Configuration for Pushr, use like:
     #
     #   Pushr::Core.configure do |config|
-    #     config.redis = { namespace: 'myapp', size: 1, url: 'redis://myhost:8877/mydb' }
+    #     config.redis = { namespace: 'myapp', url: 'redis://myhost:8877/mydb' }
     #   end
     def self.configure
       yield self
@@ -36,8 +36,8 @@ module Pushr
 
     def self.redis=(hash)
       if hash.is_a?(Hash)
-        @redis = RedisConnection.create(hash)
-        options[:namespace] ||= hash[:namespace]
+        options.merge!(hash)
+        @redis = RedisConnection.create(options)
       elsif hash.is_a?(ConnectionPool)
         @redis = hash
       else
