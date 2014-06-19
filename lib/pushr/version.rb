@@ -1,3 +1,3 @@
 module Pushr
-  VERSION = '1.0.0.pre.5'
+  VERSION = '1.0.0.rc.1'
 end
