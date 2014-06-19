@@ -11,10 +11,11 @@ want to test or contribute to this project.
 
 * Lightening fast push notification delivery
 * Redis for queueing
+* Redis or YAML for configuration
 * Multi-App
 * Multi-Provider ([APNS](https://github.com/9to5/pushr-apns), [GCM](https://github.com/9to5/pushr-gcm))
-* Integrated feedback processing
 * Multi-process
+* Integrated feedback processing
 
 ## Installation
 
@@ -120,10 +121,14 @@ To start the daemon:
 Where `<options>` can be:
 
     -f, --foreground                 Run in the foreground. Log is not written.
-    -p, --pid-file PATH              Path to write PID file. Relative to Rails root unless absolute.
-    -b, --feedback-processor PATH    Path to the feedback processor. Default: lib/pushr/feedback_processor.
-    -c, --configuration FILE         Read the configuration from this YAML file (optional)
-    -v, --version                    Print this version of push.
+    -c, --configuration FILE         Read the configuration from this YAML file
+    -o, --redis-host HOST            Hostname of redis instance
+    -r, --redis-port PORT            Port of redis instance
+    -n, --redis-namespace NAMESPACE  Namespace on redis connection
+    -p, --pid-file PATH              Path to write PID file. Relative to current directory unless absolute.
+    -b, --feedback-processor PATH    Path to the feedback processor. Default: none. Example: 'lib/pushr/feedback_processor'
+    -s, --stats-processor PATH       Path to the stats processor. Default: none. Example: 'lib/pushr/stats_processor'
+    -v, --version                    Print this version of pushr.
     -h, --help                       You're looking at it.
 
 ## Sending notifications
