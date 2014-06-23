@@ -11,6 +11,12 @@ module Pushr
       end
     end
 
+    def self.create(attributes = {})
+      m = Pushr::Message.new(attributes)
+      m.save
+      m
+    end
+
     def save
       if valid?
         Pushr::Core.redis { |conn| conn.rpush("pushr:#{app}:#{self.class::POSTFIX}", to_json) }
