@@ -151,7 +151,7 @@ Pushr::MessageApns.new(
 Silent Push Notification via APNS:
 
 ```ruby
-Push::MessageApns.create(
+Push::MessageApns.new(
     app: 'app_name',
     device: '<APNS device_token here>',
     alert: nil,
@@ -159,7 +159,7 @@ Push::MessageApns.create(
     badge: 1,
     content_available: 1,   # see footnote
     expiry: 1.day.to_i,
-    attributes_for_device: nil)
+    attributes_for_device: nil).save
 ```
 
 Use `content_available: 1` if the iOS device should start your app upon receiving the silent push notification.
