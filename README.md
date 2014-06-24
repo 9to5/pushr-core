@@ -135,7 +135,7 @@ Where `<options>` can be:
 
 APNS:
 ```ruby
-Pushr::MessageApns.new(
+Pushr::MessageApns.create(
     app: 'app_name',
     device: '<APNS device_token here>',
     alert: 'Hello World',
@@ -144,14 +144,14 @@ Pushr::MessageApns.new(
     expiry: 1.day.from_now.to_i,
     attributes_for_device: {key: 'MSG'},
     priority: 10,
-    content_available: 1).save
+    content_available: 1)
 ```
 
 
 Silent Push Notification via APNS:
 
 ```ruby
-Push::MessageApns.new(
+Push::MessageApns.create(
     app: 'app_name',
     device: '<APNS device_token here>',
     alert: nil,
@@ -159,7 +159,7 @@ Push::MessageApns.new(
     badge: 1,
     content_available: 1,   # see footnote
     expiry: 1.day.to_i,
-    attributes_for_device: nil).save
+    attributes_for_device: nil)
 ```
 
 Use `content_available: 1` if the iOS device should start your app upon receiving the silent push notification.
@@ -167,7 +167,7 @@ Use `content_available: 1` if the iOS device should start your app upon receivin
 
 GCM:
 ```ruby
-Pushr::MessageGcm.new(
+Pushr::MessageGcm.create(
     app: 'app_name',
     registration_ids: ['<GCM registration_id here>', '<GCM registration_id here>'],
     notification_key: 'notification_key_name',
@@ -176,7 +176,7 @@ Pushr::MessageGcm.new(
     time_to_live: 24 * 60 * 60,
     restricted_package_name: 'com.example.gcm',
     dry_run: false,
-    collapse_key: 'MSG').save
+    collapse_key: 'MSG')
 ```
 
 ## Feedback processing
