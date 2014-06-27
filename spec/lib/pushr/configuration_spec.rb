@@ -38,6 +38,17 @@ describe Pushr::Configuration do
     end
   end
 
+  describe 'create' do
+    subject { Pushr::ConfigurationDummy.create(app: 'app_name', connections: 2, enabled: true) }
+    it 'should create a message' do
+      expect(subject.valid?).to eql true
+    end
+
+    it 'should create a ConfigurationDummy class' do
+      expect(subject.class).to eql Pushr::ConfigurationDummy
+    end
+  end
+
   describe 'find' do
     let!(:config) { Pushr::ConfigurationDummy.new(app: 'app_name', connections: 2, enabled: true) }
     it 'should find a configuration' do

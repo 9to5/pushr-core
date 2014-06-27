@@ -24,4 +24,15 @@ describe Pushr::Feedback do
       expect(Pushr::Feedback.next).to be_kind_of(Pushr::FeedbackDummy)
     end
   end
+
+  describe 'create' do
+    subject { Pushr::FeedbackDummy.create(app: 'app_name', device: 'a' * 64, follow_up: 'delete', failed_at: Time.now) }
+    it 'should create a message' do
+      expect(subject.valid?).to eql true
+    end
+
+    it 'should create a FeedbackDummy class' do
+      expect(subject.class).to eql Pushr::FeedbackDummy
+    end
+  end
 end

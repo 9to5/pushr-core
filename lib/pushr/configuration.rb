@@ -27,6 +27,12 @@ module Pushr
       end
     end
 
+    def self.create(attributes = {})
+      m = new(attributes)
+      m.save
+      m
+    end
+
     def delete
       Pushr::Core.redis { |conn| conn.hdel('pushr:configurations', key) }
     end

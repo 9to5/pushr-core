@@ -53,8 +53,8 @@ it will use that. The configuration is stored in Redis and you add the configura
 
 APNS ([see](https://github.com/9to5/pushr-core#generating-certificates)):
 ```ruby
-Pushr::ConfigurationApns.new(app: 'app_name', connections: 2, enabled: true,
-    certificate: File.read('certificate.pem'), sandbox: false, skip_check_for_error: false).save
+Pushr::ConfigurationApns.create(app: 'app_name', connections: 2, enabled: true,
+    certificate: File.read('certificate.pem'), sandbox: false, skip_check_for_error: false)
 ```
 
 The `skip_check_for_error` parameter can be set to `true` or `false`. If set to `true` the APNS service
@@ -64,8 +64,8 @@ sandbox devices in your production environment you should not set `skip_check_fo
 
 APNS Feedback:
 ```ruby
-Pushr::ConfigurationApnsFeedback.new(app: 'app_name', connections: 1, enabled: true,
-    feedback_poll: 60).save
+Pushr::ConfigurationApnsFeedback.create(app: 'app_name', connections: 1, enabled: true,
+    feedback_poll: 60)
 ```
 
 Use this configuration to let a thread check for feedback on all APNS Configurations. It checks every `feedback_poll` in seconds.
@@ -73,7 +73,7 @@ There should be only one instance of this configuration type.
 
 GCM ([see](http://developer.android.com/guide/google/gcm/gs.html)):
 ```ruby
-Pushr::ConfigurationGcm.new(app: 'app_name', connections: 2, enabled: true, api: '<api key here>').save
+Pushr::ConfigurationGcm.create(app: 'app_name', connections: 2, enabled: true, api: '<api key here>')
 ```
 
 You can have each provider per app_name and you can have more than one app_name. Use the instructions below to generate
@@ -135,7 +135,7 @@ Where `<options>` can be:
 
 APNS:
 ```ruby
-Pushr::MessageApns.new(
+Pushr::MessageApns.create(
     app: 'app_name',
     device: '<APNS device_token here>',
     alert: 'Hello World',
@@ -144,14 +144,14 @@ Pushr::MessageApns.new(
     expiry: 1.day.from_now.to_i,
     attributes_for_device: {key: 'MSG'},
     priority: 10,
-    content_available: 1).save
+    content_available: 1)
 ```
 
 
 Silent Push Notification via APNS:
 
 ```ruby
-Push::MessageApns.create(
+Pushr::MessageApns.create(
     app: 'app_name',
     device: '<APNS device_token here>',
     alert: nil,
@@ -167,7 +167,7 @@ Use `content_available: 1` if the iOS device should start your app upon receivin
 
 GCM:
 ```ruby
-Pushr::MessageGcm.new(
+Pushr::MessageGcm.create(
     app: 'app_name',
     registration_ids: ['<GCM registration_id here>', '<GCM registration_id here>'],
     notification_key: 'notification_key_name',
@@ -176,7 +176,7 @@ Pushr::MessageGcm.new(
     time_to_live: 24 * 60 * 60,
     restricted_package_name: 'com.example.gcm',
     dry_run: false,
-    collapse_key: 'MSG').save
+    collapse_key: 'MSG')
 ```
 
 ## Feedback processing

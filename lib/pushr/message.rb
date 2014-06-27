@@ -20,6 +20,12 @@ module Pushr
       end
     end
 
+    def self.create(attributes = {})
+      m = new(attributes)
+      m.save
+      m
+    end
+
     def to_json
       MultiJson.dump(to_hash)
     end

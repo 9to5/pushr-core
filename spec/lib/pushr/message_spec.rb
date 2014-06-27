@@ -14,7 +14,7 @@ describe Pushr::Message do
     end
   end
 
-  describe 'next' do
+  describe 'save' do
     let(:message) { Pushr::MessageDummy.new(app: 'app_name') }
     let(:message_invalid) { Pushr::MessageDummy.new }
     it 'should return true' do
@@ -28,6 +28,17 @@ describe Pushr::Message do
     it 'should save a message' do
       message.save
       expect(Pushr::Message.next('pushr:app_name:dummy')).to be_kind_of(Pushr::MessageDummy)
+    end
+  end
+
+  describe 'create' do
+    subject { Pushr::MessageDummy.create(app: 'app_name') }
+    it 'should create a message' do
+      expect(subject.valid?).to eql true
+    end
+
+    it 'should create a MessageDummy class' do
+      expect(subject.class).to eql Pushr::MessageDummy
     end
   end
 end
