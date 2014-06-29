@@ -1,15 +1,12 @@
 # Pushr
 
-Please note: We're in the process of updating this gem. The current code is not yet stable. Please contact us if you
-want to test or contribute to this project.
-
 [![Build Status](https://travis-ci.org/9to5/pushr-core.svg?branch=master)](https://travis-ci.org/9to5/pushr-core)
 [![Code Climate](https://codeclimate.com/github/9to5/pushr-core.png)](https://codeclimate.com/github/9to5/pushr-core)
 [![Coverage Status](https://coveralls.io/repos/9to5/pushr-core/badge.png)](https://coveralls.io/r/9to5/pushr-core)
 
 ## Features
 
-* Lightening fast push notification delivery
+* Lightning fast push notification delivery
 * Redis for queueing
 * Redis or YAML for configuration
 * Multi-App
