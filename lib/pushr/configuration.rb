@@ -33,6 +33,14 @@ module Pushr
       m
     end
 
+    def self.create!(attributes = {})
+      m = new(attributes)
+      unless m.save
+        raise Pushr::Error::RecordInvalid
+      end
+      m
+    end
+
     def delete
       Pushr::Core.redis { |conn| conn.hdel('pushr:configurations', key) }
     end

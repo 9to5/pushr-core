@@ -26,6 +26,14 @@ module Pushr
       m
     end
 
+    def self.create!(attributes = {})
+      m = new(attributes)
+      unless m.save
+        raise Pushr::Error::RecordInvalid
+      end
+      m
+    end
+
     def to_json
       MultiJson.dump(to_hash)
     end

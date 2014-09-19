@@ -35,4 +35,26 @@ describe Pushr::Feedback do
       expect(subject.class).to eql Pushr::FeedbackDummy
     end
   end
+
+  describe 'create!' do
+    subject { Pushr::FeedbackDummy.create!(app: app_name, device: 'a' * 64, follow_up: 'delete', failed_at: Time.now) }
+
+    context 'with app name' do
+      let(:app_name) { 'app_name' }
+      it 'should create a message' do
+        expect(subject.valid?).to eql true
+      end
+
+      it 'should create a FeedbackDummy class' do
+        expect(subject.class).to eql Pushr::FeedbackDummy
+      end
+    end
+
+    context 'without app name' do
+      let(:app_name) { nil }
+      it 'should raise error' do
+        expect { subject }.to raise_error Pushr::Error::RecordInvalid
+      end
+    end
+  end
 end

@@ -130,6 +130,9 @@ Where `<options>` can be:
 
 ## Sending notifications
 
+Use the `new` and `save` methods to create a message or use the `create` and `create!` methods. These methods are
+similar to the ActiveRecord model methods.
+
 APNS:
 ```ruby
 Pushr::MessageApns.create(
