@@ -133,15 +133,15 @@ Where `<options>` can be:
 APNS:
 ```ruby
 Pushr::MessageApns.create(
-    app: 'app_name',
-    device: '<APNS device_token here>',
-    alert: 'Hello World',
-    sound: '1.aiff',
-    badge: 1,
-    expiry: 1.day.from_now.to_i,
-    attributes_for_device: {key: 'MSG'},
-    priority: 10,
-    content_available: 1)
+    app: 'app_name',                      # required: String, the name of the configuration
+    device: '<APNS device_token here>',   # required: String, token of the device
+    expiry: 1.day.from_now.to_i,          # required: Integer, A UNIX epoch date expressed in seconds
+    priority: 10,                         # required: Integer, 10 or 5 (should be 10 if message includes an alert, sound or badge)
+    alert: 'Hello World',                 # optional: String or Hash, read APNS documentation for more information
+    sound: '1.aiff',                      # optional: String, sound to play
+    badge: 1,                             # optional: Integer, display badge on homescreen
+    attributes_for_device: {key: 'MSG'},  # optional: Hash, send additional parameters
+    content_available: 1)                 # optional: Integer, 1 if device should be notified if new content is available
 ```
 
 
@@ -165,15 +165,15 @@ Use `content_available: 1` if the iOS device should start your app upon receivin
 GCM:
 ```ruby
 Pushr::MessageGcm.create(
-    app: 'app_name',
-    registration_ids: ['<GCM registration_id here>', '<GCM registration_id here>'],
-    notification_key: 'notification_key_name',
-    delay_while_idle: true,
-    data: { message: 'Hello World' },
-    time_to_live: 24 * 60 * 60,
-    restricted_package_name: 'com.example.gcm',
-    dry_run: false,
-    collapse_key: 'MSG')
+    app: 'app_name',                                # required: String, the name of the configuration
+    registration_ids: ['<registration_id>', '...'], # required: Array of registration ids
+    notification_key: 'notification_key_name',      # optional: String, Use with User Notifications
+    delay_while_idle: true,                         # optional: Boolean, message is received if device is active
+    data: { message: 'Hello World' },               # optional: Hash, contains information for the app
+    time_to_live: 24 * 60 * 60,                     # optional: Integer, in seconds how long the message will be stored
+    restricted_package_name: 'com.example.gcm',     # optional: String, message will only be received with this package name
+    dry_run: false,                                 # optional: Boolean, do not actually deliver the message to the app
+    collapse_key: 'MSG')                            # optional: String, messages with the same key can be collapsed into one
 ```
 
 ## Feedback processing
