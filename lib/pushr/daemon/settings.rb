@@ -12,8 +12,8 @@ module Pushr
         @pid_file = nil
       end
 
-      def pid_file=(arg)
-        @pid_file = File.join(Dir.pwd, arg) if arg && !Pathname.new(arg).absolute?
+      def pid_file=(file)
+        @pid_file = Pathname.new(file).absolute? ? file : File.join(Dir.pwd, file)
       end
     end
   end
