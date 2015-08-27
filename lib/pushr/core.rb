@@ -31,7 +31,7 @@ module Pushr
 
     def self.redis(&block)
       fail ArgumentError, 'requires a block' unless block
-      @redis ||= Pushr::RedisConnection.create
+      @redis ||= RedisConnection.create
       @redis.with(&block)
     end
 
@@ -52,6 +52,14 @@ module Pushr
 
     def self.external_id_tag
       options[:external_id_tag]
+    end
+
+    def self.configuration_json
+      options[:configuration_json]
+    end
+
+    def self.configuration_json=(json)
+      options[:configuration_json] = json
     end
 
     def self.configuration_file
