@@ -7,13 +7,8 @@ module Pushr
     def self.create(options = {})
       namespace = options[:namespace] || Pushr::Core.options[:namespace]
 
-      config = {
-        url: options[:url] || 'redis://master',
-        sentinels: options[:sentinels] || [],
-      }
-
       ConnectionPool.new(timeout: options[:timeout] || 1, size: options[:size] || 5) do
-        client = Redis.connect(config)
+        client = Redis.connect(options)
 
         if namespace
           Redis::Namespace.new(namespace, redis: client)
