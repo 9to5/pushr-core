@@ -27,6 +27,11 @@ module Pushr
     #   end
     def self.configure
       yield self
+      @configured = true
+    end
+
+    def self.configured?
+      !!@configured
     end
 
     def self.redis(&block)
