@@ -45,8 +45,8 @@ module Pushr
       # feedback handler + app + app.totalconnections
       connections = 1 + 1 + App.total_connections
       Pushr::Core.configure do |config|
-        config.redis =  if Pushr::Core.configuration_json
-          ::MultiJson.load(Pushr::Core.configuration_json, :symbolize_keys => true)[:redis]
+        config.redis = if Pushr::Core.configuration_json
+          ::MultiJson.load(Pushr::Core.configuration_json, :symbolize_keys => true)[:redis].merge(size: connections)
         else
           { size: connections }
         end
