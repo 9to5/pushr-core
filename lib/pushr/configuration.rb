@@ -59,6 +59,10 @@ module Pushr
       end
     end
 
+    def self.all
+      self.apps
+    end
+
     def self.find(key)
       config = Pushr::Core.redis { |conn| conn.hget('pushr:configurations', key) }
       instantiate_json(config, key)
