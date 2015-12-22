@@ -119,9 +119,12 @@ Where `<options>` can be:
 
     -f, --foreground                 Run in the foreground. Log is not written.
     -c, --configuration FILE         Read the configuration from this YAML file
+    -j, --json JSON                  Read the configuration from provided JSON
+    -a, --redis-json JSON            Read redis configuration from JSON. For more info check redis gem documentation
     -o, --redis-host HOST            Hostname of redis instance
     -r, --redis-port PORT            Port of redis instance
     -n, --redis-namespace NAMESPACE  Namespace on redis connection
+    -d, --redis-db DB                Redis database number
     -p, --pid-file PATH              Path to write PID file. Relative to current directory unless absolute.
     -b, --feedback-processor PATH    Path to the feedback processor. Default: none. Example: 'lib/pushr/feedback_processor'
     -s, --stats-processor PATH       Path to the stats processor. Default: none. Example: 'lib/pushr/stats_processor'

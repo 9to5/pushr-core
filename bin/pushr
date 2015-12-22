@@ -33,6 +33,14 @@ ARGV.options do |opts|
     connection[:port] = port
   end
 
+  opts.on('-d DB', '--redis-db DB', String, 'Database of redis instance') do |db|
+    connection[:db] = db
+  end
+
+  opts.on('-a JSON', '--redis-json JSON', String, 'Redis configuration json') do |redis|
+    connection[:redis] = redis
+  end
+
   opts.on('-n NAMESPACE', '--redis-namespace NAMESPACE', String, 'Namespace on redis connection') do |namespace|
     connection[:namespace] = namespace
   end
@@ -68,7 +76,8 @@ end
 Pushr::Core.configure do |config|
   x = { }
   x[:namespace] = connection[:namespace] if connection[:namespace]
-  x[:url] = "redis://#{connection[:host]}:#{connection[:port] || 6379}/0" if connection[:host]
+  x[:url] = "redis://#{connection[:host]}:#{connection[:port] || 6379}/#{connection[:db] || 0}" if connection[:host]
+  x.merge! ::MultiJson.load(connection[:redis]) if connection[:redis]
   config.redis = x
 end
 
