@@ -83,6 +83,15 @@ Pushr::Core.configure do |config|
     json_params.each do |key, value|
       redis_params[key.to_sym] = value
     end
+    if redis_params[:sentinels]
+      old_sentinels = redis_params[:sentinels]
+      redis_params[:sentinels] = []
+      old_sentinels.each do |old_sentinel|
+        new_sentinel = Hash.new
+        old_sentinel.each { |key, value| new_sentinel[key.to_sym] = value }
+        redis_params[:sentinels] << new_sentinel
+      end
+    end
     x.merge! redis_params
     puts x
   end
