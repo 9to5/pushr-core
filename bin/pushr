@@ -84,6 +84,7 @@ Pushr::Core.configure do |config|
       redis_params[key.to_sym] = value
     end
     x.merge! redis_params
+    puts x
   end
   config.redis = x
 end
