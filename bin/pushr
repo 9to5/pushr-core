@@ -77,7 +77,14 @@ Pushr::Core.configure do |config|
   x = { }
   x[:namespace] = connection[:namespace] if connection[:namespace]
   x[:url] = "redis://#{connection[:host]}:#{connection[:port] || 6379}/#{connection[:db] || 0}" if connection[:host]
-  x.merge! ::MultiJson.load(connection[:redis]) if connection[:redis]
+  if connection[:redis]
+    json_params = ::MultiJson.load(connection[:redis])
+    redis_params = Hash.new
+    json_params.each do |key, value|
+      redis_params[key.to_sym] = value
+    end
+    x.merge! redis_params
+  end
   config.redis = x
 end
 
