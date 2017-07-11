@@ -41,6 +41,10 @@ module Pushr
       m
     end
 
+    def queue_depth
+      Pushr::Core.redis { |conn| conn.llen("pushr:#{key}") }
+    end
+
     def delete
       Pushr::Core.redis { |conn| conn.hdel('pushr:configurations', key) }
     end
