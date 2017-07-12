@@ -68,14 +68,13 @@ Pushr::Core.configure do |config|
   config.redis = x
 end
 
-if ENV['AIRBRAKE_API_KEY']
+if ENV['AIRBRAKE_API_KEY'] || ENV['AIRBRAKE_PROJECT_KEY']
   require 'airbrake'
   settings.error_notification = true
   Airbrake.configure do |airbrake|
-    airbrake.api_key = ENV['AIRBRAKE_API_KEY']
-    airbrake.host    = ENV['AIRBRAKE_HOST']
-    airbrake.port    = ENV['AIRBRAKE_PORT'] ? ENV['AIRBRAKE_PORT'].to_i : 80
-    airbrake.secure  = airbrake.port == 443
+    airbrake.host = ENV['AIRBRAKE_HOST']
+    airbrake.project_id = ENV['AIRBRAKE_PROJECT_ID'] || 1
+    airbrake.project_key = ENV['AIRBRAKE_API_KEY'] || ENV['AIRBRAKE_PROJECT_KEY']
   end
 end
 

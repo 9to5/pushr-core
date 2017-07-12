@@ -1,7 +1,7 @@
 module Pushr
   module Daemon
     class MessageHandler
-      attr_reader :name
+      attr_reader :name, :connection
 
       def initialize(queue_name, connection, name, i)
         @queue_name = queue_name
@@ -30,8 +30,8 @@ module Pushr
         return if message.nil?
 
         Pushr::Core.instrument('message', app: message.app, type: message.type) do
-          @connection.write(message)
-          Pushr::Daemon.logger.info("[#{@connection.name}] Message delivered to #{message.to_json}")
+          connection.write(message)
+          Pushr::Daemon.logger.info("[#{connection.name}] Message delivered to #{message.to_json}")
         end
       rescue => e
         Pushr::Daemon.logger.error(e)
