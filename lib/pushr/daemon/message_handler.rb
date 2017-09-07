@@ -29,7 +29,7 @@ module Pushr
         message = Pushr::Message.next(@queue_name)
         return if message.nil?
 
-        Pushr::Core.instrument('message', app: message.app, type: message.type) do
+        Pushr::Core.instrument('message', app: message.app, type: message.type, queue_name: @queue_name) do
           @connection.write(message)
           Pushr::Daemon.logger.info("[#{@connection.name}] Message delivered to #{message.to_json}")
         end
