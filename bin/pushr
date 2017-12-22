@@ -21,12 +21,24 @@ ARGV.options do |opts|
     Pushr::Core.configuration_file = file
   end
 
+  opts.on('-j JSON', '--json JSON', 'Read the configuration from this JSON') do |json|
+    Pushr::Core.configuration_json = json
+  end
+
   opts.on('-o HOST', '--redis-host HOST', String, 'Hostname of redis instance') do |host|
     connection[:host] = host
   end
 
   opts.on('-r PORT', '--redis-port PORT', String, 'Port of redis instance') do |port|
     connection[:port] = port
+  end
+
+  opts.on('-d DB', '--redis-db DB', String, 'Database of redis instance') do |db|
+    connection[:db] = db
+  end
+
+  opts.on('-a JSON', '--redis-json JSON', String, 'Redis configuration json') do |redis|
+    connection[:redis] = redis
   end
 
   opts.on('-n NAMESPACE', '--redis-namespace NAMESPACE', String, 'Namespace on redis connection') do |namespace|
@@ -64,7 +76,25 @@ end
 Pushr::Core.configure do |config|
   x = { }
   x[:namespace] = connection[:namespace] if connection[:namespace]
-  x[:url] = "redis://#{connection[:host]}:#{connection[:port] || 6379}/0" if connection[:host]
+  x[:url] = "redis://#{connection[:host]}:#{connection[:port] || 6379}/#{connection[:db] || 0}" if connection[:host]
+  if connection[:redis]
+    json_params = ::MultiJson.load(connection[:redis])
+    redis_params = Hash.new
+    json_params.each do |key, value|
+      redis_params[key.to_sym] = value
+    end
+    if redis_params[:sentinels]
+      old_sentinels = redis_params[:sentinels]
+      redis_params[:sentinels] = []
+      old_sentinels.each do |old_sentinel|
+        new_sentinel = Hash.new
+        old_sentinel.each { |key, value| new_sentinel[key.to_sym] = value }
+        redis_params[:sentinels] << new_sentinel
+      end
+    end
+    x.merge! redis_params
+    puts x
+  end
   config.redis = x
 end
 

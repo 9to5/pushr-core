@@ -13,6 +13,7 @@ module Pushr
 
     def save
       if valid?
+        puts "save and_redis_queue pushr:#{app}:#{self.class::POSTFIX} #{to_json}"
         Pushr::Core.redis { |conn| conn.rpush("pushr:#{app}:#{self.class::POSTFIX}", to_json) }
         return true
       else
@@ -41,7 +42,11 @@ module Pushr
     def self.next(queue_name, timeout = 3)
       Pushr::Core.redis do |conn|
         message = conn.blpop(queue_name, timeout: timeout)
-        return instantiate(message[1]) if message
+        if message
+          msg = instantiate(message[1]) 
+          puts "[#{msg.app}] Message blpop #{msg.to_json}"
+          return msg
+        end
       end
     end
 

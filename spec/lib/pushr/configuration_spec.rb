@@ -10,7 +10,7 @@ describe Pushr::Configuration do
 
   describe 'all' do
     it 'returns all configurations' do
-      expect(Pushr::Configuration.all).to eql([])
+      expect(Pushr::Configuration.apps).to eql([])
     end
   end
 
@@ -34,7 +34,7 @@ describe Pushr::Configuration do
 
     it 'should save a configuration' do
       config.save
-      expect(Pushr::Configuration.all.count).to eql(1)
+      expect(Pushr::Configuration.apps.count).to eql(1)
     end
   end
 
@@ -83,9 +83,9 @@ describe Pushr::Configuration do
     let!(:config) { Pushr::ConfigurationDummy.new(app: 'app_name', connections: 2, enabled: true) }
     it 'should remove a configuration' do
       config.save
-      expect(Pushr::Configuration.all.count).to eql(1)
+      expect(Pushr::Configuration.apps.count).to eql(1)
       config.delete
-      expect(Pushr::Configuration.all.count).to eql(0)
+      expect(Pushr::Configuration.apps.count).to eql(0)
     end
   end
 end

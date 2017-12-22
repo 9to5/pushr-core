@@ -49,17 +49,28 @@ module Pushr
       MultiJson.dump(to_hash)
     end
 
-    def self.all
-      if Pushr::Core.configuration_file # only set if file exists
+    def self.apps
+      if Pushr::Core.configuration_json # only set if file exists
+        read_from_json
+      elsif Pushr::Core.configuration_file # only set if file exists
         read_from_yaml_file
       else
         read_from_redis
       end
     end
 
+    def self.all
+      self.apps
+    end
+
     def self.find(key)
       config = Pushr::Core.redis { |conn| conn.hget('pushr:configurations', key) }
       instantiate_json(config, key)
+    end
+
+    def self.read_from_json
+      configs = ::MultiJson.load Pushr::Core.configuration_json
+      configs['apps'].map { |hsh| instantiate(hsh) }
     end
 
     def self.read_from_yaml_file

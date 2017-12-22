@@ -21,7 +21,7 @@ Gem::Specification.new do |s|
 
   s.required_ruby_version = '>= 1.9.3'
 
-  s.add_runtime_dependency 'redis', '~> 3.0'
+  s.add_runtime_dependency 'redis', '~> 3.2.1'
   s.add_runtime_dependency 'redis-namespace', '~> 1.4'
   s.add_runtime_dependency 'multi_json'
   s.add_runtime_dependency 'connection_pool', '~> 2.0'
