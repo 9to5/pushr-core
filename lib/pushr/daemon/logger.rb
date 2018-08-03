@@ -45,7 +45,7 @@ module Pushr
 
       def error_notification(e)
         if do_error_notification?(e) && defined?(Airbrake)
-          Airbrake.notify_or_ignore(e)
+          Airbrake.notify(e)
         end
       end
 
