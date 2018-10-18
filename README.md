@@ -10,7 +10,7 @@
 * Redis for queueing
 * Redis or YAML for configuration
 * Multi-App
-* Multi-Provider ([APNS](https://github.com/9to5/pushr-apns), [GCM](https://github.com/9to5/pushr-gcm))
+* Multi-Provider ([APNS](https://github.com/9to5/pushr-apns), [APNS2](https://github.com/9to5/pushr-apns2), [GCM](https://github.com/9to5/pushr-gcm), [FCM](https://github.com/9to5/pushr-fcm), [WNS](https://github.com/9to5/pushr-wns))
 * Multi-process
 * Integrated feedback processing
 
