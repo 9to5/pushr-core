@@ -12,6 +12,12 @@ describe Pushr::Configuration do
     it 'returns all configurations' do
       expect(Pushr::Configuration.all).to eql([])
     end
+
+    it 'should not load missing configuration constant' do
+      Pushr::ConfigurationDummy2.new(app: 'app_name', connections: 2, enabled: true).save
+      Pushr.send(:remove_const, :ConfigurationDummy2)
+      expect(Pushr::Configuration.all).to eql([])
+    end
   end
 
   describe 'create' do

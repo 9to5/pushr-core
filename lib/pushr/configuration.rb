@@ -69,13 +69,13 @@ module Pushr
     def self.read_from_yaml_file
       filename = Pushr::Core.configuration_file
       configs = File.open(filename) { |fd| YAML.load(fd) }
-      configs.map { |hsh| instantiate(hsh) }
+      configs.map { |hsh| instantiate(hsh) }.compact
     end
 
     def self.read_from_redis
       configurations = Pushr::Core.redis { |conn| conn.hgetall('pushr:configurations') }
       configurations.each { |key, config| configurations[key] = instantiate_json(config, key) }
-      configurations.values
+      configurations.values.compact
     end
 
     def self.instantiate_json(config, id)
@@ -83,7 +83,12 @@ module Pushr
     end
 
     def self.instantiate(hsh)
-      klass = hsh['type'].split('::').reduce(Object) { |a, e| a.const_get e }
+      klass = hsh['type'].split('::').reduce(Object) do |a, e|
+        if Object.const_defined?(hsh['type'])
+          a.const_get e
+        end
+      end
+      return nil if klass == nil
       klass.new(hsh)
     end
   end
