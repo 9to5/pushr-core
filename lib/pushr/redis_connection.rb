@@ -17,7 +17,7 @@ module Pushr
     end
 
     def self.build_client(url, namespace, driver)
-      client = Redis.connect(url: url, driver: driver)
+      client = Redis.new(url: url, driver: driver)
       if namespace
         Redis::Namespace.new(namespace, redis: client)
       else
